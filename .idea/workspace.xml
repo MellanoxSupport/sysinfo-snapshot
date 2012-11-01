@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="39f4415b-4399-4ae4-9d89-c7c17f3d5a73" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/.name" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sysinfo-snapshot.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Datasets" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sysinfo-snapshot.py" afterPath="$PROJECT_DIR$/sysinfo-snapshot.py" />
     </list>
     <ignored path="sysinfo-snapshot-pub.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -24,10 +24,41 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="sysinfo-snapshot.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="sysinfo-snapshot.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sysinfo-snapshot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="526" column="12" selection-start="20447" selection-end="20447" vertical-scroll-proportion="9.279811">
+            <state line="47" column="0" selection-start="897" selection-end="897" vertical-scroll-proportion="-19.5">
+              <folding>
+                <element signature="e#133#166#0" expanded="true" />
+                <element signature="e#8211#17881#0" expanded="false" />
+                <element signature="e#16601#16868#0" expanded="false" />
+                <element signature="e#16916#17175#0" expanded="false" />
+                <element signature="e#17221#17488#0" expanded="false" />
+                <element signature="e#17635#17760#0" expanded="false" />
+                <element signature="e#17807#17881#0" expanded="false" />
+                <element signature="e#17914#18421#0" expanded="false" />
+                <element signature="e#18446#19054#0" expanded="false" />
+                <element signature="e#19091#19237#0" expanded="false" />
+                <element signature="e#19272#19418#0" expanded="false" />
+                <element signature="e#19456#19602#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sysinfo-snapshot.sh" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/sysinfo-snapshot.sh">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="961" column="0" selection-start="21962" selection-end="21962" vertical-scroll-proportion="25.468199">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Datasets" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Datasets">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="11" column="0" selection-start="143" selection-end="143" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -46,7 +77,9 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
+        <option value="$PROJECT_DIR$/Datasets" />
         <option value="$PROJECT_DIR$/sysinfo-snapshot.py" />
+        <option value="$PROJECT_DIR$/sysinfo-snapshot.sh" />
       </list>
     </option>
   </component>
@@ -207,7 +240,11 @@
       <created>1351795684794</created>
       <updated>1351795684795</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="first commit">
+      <created>1351796709202</created>
+      <updated>1351796709202</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -224,8 +261,8 @@
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.14674494" sideWeight="0.6" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.14674494" sideWeight="0.67071825" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32928178" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -295,9 +332,36 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Datasets">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="0" selection-start="143" selection-end="143" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/sysinfo-snapshot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="526" column="12" selection-start="20447" selection-end="20447" vertical-scroll-proportion="9.279811">
+        <state line="47" column="0" selection-start="897" selection-end="897" vertical-scroll-proportion="-19.5">
+          <folding>
+            <element signature="e#133#166#0" expanded="true" />
+            <element signature="e#8211#17881#0" expanded="false" />
+            <element signature="e#16601#16868#0" expanded="false" />
+            <element signature="e#16916#17175#0" expanded="false" />
+            <element signature="e#17221#17488#0" expanded="false" />
+            <element signature="e#17635#17760#0" expanded="false" />
+            <element signature="e#17807#17881#0" expanded="false" />
+            <element signature="e#17914#18421#0" expanded="false" />
+            <element signature="e#18446#19054#0" expanded="false" />
+            <element signature="e#19091#19237#0" expanded="false" />
+            <element signature="e#19272#19418#0" expanded="false" />
+            <element signature="e#19456#19602#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sysinfo-snapshot.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="961" column="0" selection-start="21962" selection-end="21962" vertical-scroll-proportion="25.468199">
           <folding />
         </state>
       </provider>

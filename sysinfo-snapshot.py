@@ -16,6 +16,8 @@ Dependencies:
 from optparse import OptionParser
 import subprocess
 import shlex
+import platform
+import os
 
 class System:
     '''
@@ -27,23 +29,25 @@ class System:
         #Any of these values upon retrieval failure will be NULL
         self.uname = platform.uname()
         self.system = self.uname[0]
-        self.nodeinfo = self.uname[1]
-        self.release = self.uname[2]
-        self.version = self.uname[3]
+        self.hostname = self.uname[1]
+        self.kernel_version = self.uname[2]
+        self.release = self.uname[3]
         self.CPU_architecture = self.uname[4]
-        self.hostname = None
 
         #OS environment variables in a dictionary
         self.env = os.environ
 
-    def getPath():
+    def getPath(self):
         pass
 
-    def getDate():
+    def getDate(self):
         pass
 
-    def getHostname():
+    def getHostname(self):
         pass
+
+    def getRelease(self):
+        return self.release
 
 class Command:
     def __init__(self, cmd, name, TIMEOUT = 100):
@@ -153,7 +157,7 @@ class SysHTMLGenerator:
 
     #noinspection PyUnreachableCode,PyUnreachableCode,PyUnreachableCode,PyUnreachableCode,PyUnreachableCode
     def generateIndex(self):
-        out = """
+        out = '''
 <a name="index"></a>
 <h1>Mellanox Technologies</h1>
 <a name="index"></a>
@@ -161,7 +165,7 @@ class SysHTMLGenerator:
 <a name="index"></a>
 <h2>Version: 0.1</h2>
 <hr>
-"""
+              '''
         return out
 
     def generateTableSection(self, sysinfo_data_structure):
@@ -170,11 +174,11 @@ class SysHTMLGenerator:
         if c >= section_split_delimiter:
             section_split_delimiter += section_split_delimiter
             html += "</tr>\n<tr>"
-        html += """
+        html += '''
 <td width="25%">
 <a href="#{id}">{content}</a>
 </td>
-""".format(id = element.getId(), content = sysinfo_data_structure.getOutput())
+                '''.format(id = element.getId(), content = sysinfo_data_structure.getOutput())
         html += "</tbody>\n</table>"
         return html
 
@@ -218,7 +222,7 @@ class SysHTMLGenerator:
             self.generateOutputSection(element)
 
     def constructPage(self):
-        page = """
+        page = '''
 <html>
     <head>
     {title}
@@ -237,7 +241,7 @@ class SysHTMLGenerator:
         </pre>
     </body>
 </html>
-               """.format(title = self.generateTitle(self.hostname),
+               '''.format(title = self.generateTitle(self.hostname),
 
                           index = self.generateIndex(),
 
@@ -266,6 +270,18 @@ class SysinfoSnapshotWin:
 class SysinfoSnapshotUnix:
     def __init__(self):
         SysinfoSnapshot.__init__()
+        self.APPOSTYPE = 'Unix'
+
+        self.commandStrings = ['arp -an',
+                               'biosdecode',
+                               'blkid -c /dev/null | sort',
+                               'cat /etc/SuSE-release'
+                               ]
+        self.fabdiagStrings = []
+        self.fileStrings = []
+        self.methodStrings = []
+
+        self.allStrings = [self.commandStrings, self.methodStrings, self.fileStrings, self.fabdiagStrings]
 
     def runDiscovery(self):
         self.server_commands = [
@@ -510,10 +526,10 @@ class App:
 
         #detect the OS and initiate the correct object representing the sysinfo-snapshot program capabilities
         if self.system.operating_system in ['Windows', 'Microsoft']:
-            sysinfo = SysinfoSnapshotWin()
+            self.sysinfo = SysinfoSnapshotWin()
 
         else:
-            sysinfo = SysinfoSnapshotUnix(self.flav)
+            self.sysinfo = SysinfoSnapshotUnix()
 
         self.__configureCLI__()
 
@@ -521,9 +537,14 @@ class App:
         self.config = self.__getApplicationConfig__()
 
     def __configureCLI__(self):
+        '''
+        Add support and dispatch for all flags
+        '''
         pass
 
     def __getApplicationConfig__(self):
+        if self.sysinfo.APPOSTYPE == 'Unix':
+            pass
         pass
 
 
@@ -531,5 +552,11 @@ class App:
 
 
 
-if __name__ == '__main__':
-    pass
+
+
+
+
+def testsysteminformation():
+    s = System()
+    print s.getRelease()
+testsysteminformation()

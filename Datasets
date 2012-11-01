@@ -1,0 +1,16 @@
+Generic
+    interface
+        ip addr
+        network addr
+        mask
+        mac
+
+    network
+        DNS
+        Routes
+        Default-GW
+
+
+Windows
+
+Linux
