@@ -93,28 +93,6 @@ class WindowsCommand(Command):
         #reserving for windows implementation
         pass
 
-class RogueFunctions:
-    def eth_tool_all_interfaces():
-        pass
-
-    def Multicast_Information():
-        pass
-
-    def zz_proc_net_bonding_files():
-        pass
-
-    def zz_sys_class_net_files():
-        pass
-
-    def ib_find_bad_ports():
-        pass
-
-    def ib_mc_info_show():
-        pass
-
-    def ib_switches_FW_scan():
-        pass
-
 class IdentityService:
     def __init__(self, poolrange):
         self.pool = range(poolrange)
@@ -201,14 +179,17 @@ class SysHTMLGenerator:
         html = ''
 
         #Not exactly sure how HTML tables work, trying to figure out specifications for the entire table section here
-        html += "<table cols=\"{numofcols}\" border=\"{bordervalue}\" bgcolor=\"{bgcolor}\"width=\"{width}%\">\n<tbody>\n<tr>".format(numofcols = "4",
-                                                                                                                                      bordervalue = "0",
-                                                                                                                                      bgcolor = "#E0E0FF",
-                                                                                                                                      width = "100",
-                                                                                                                                      )
+        html += '''
+        <table cols=\"{numofcols}\" border=\"{bordervalue}\" bgcolor=\"{bgcolor}\"width=\"{width}%\">\n<tbody>\n<tr>
+        '''.format(
+            numofcols = "4",
+            bordervalue = "0",
+            bgcolor = "#E0E0FF",
+            width = "100",
+            )
         #elements here are unpackaged sysinfostructs
         for element in sysinfo_data_structure_list:
-            html = self.generateTableSection(element)
+            html += self.generateTableSection(element)
         html += self.generateSectionFooter(sysinfo_data_structure.getId() - 1, 'index', sysinfo_data_structure.getId() + 1)
         return html
 
@@ -261,8 +242,9 @@ class SysHTMLGenerator:
         return page
 
 class SysinfoSnapshot:
-    def __init__(self):
+    def __init__(self, system = None):
         self.factory = SysInfoDataFactory()
+        self.system = system
 
 class SysinfoSnapshotWin:
     def __init__(self):
@@ -274,24 +256,69 @@ class SysinfoSnapshotUnix:
         self.APPOSTYPE = 'Unix'
 
         self.commandStrings = ['arp -an',
+                               #-n, --numeric
+                               #shows numerical addresses instead of trying to determine symbolic host, port or user names.
+                               #-a [hostname], --display [hostname]
+                               #Shows the entries of the specified hosts. If the hostname parameter is not used, all entries will be displayed. The entries will be displayed in alternate (BSD) style
+                               #Arp manipulates the kernel's ARP cache in various ways. The primary options are clearing an address mapping entry and manually setting up one. For debugging purposes, the arp program also allows a complete dump of the ARP cache.
+
                                'biosdecode',
+
+                               #biosdecode parses the BIOS memory and prints information about all structures (or entry points) it knows of. Currently known entry point types are:
+
+                               #List block devices on the system
                                'blkid -c /dev/null | sort',
-                               'cat /etc/SuSE-release'
+
+                                #Grab the date, could probably be replaced by some Python library
+                                'date',
+
+                                #Show information about the file system on which each FILE resides, or all file systems by default.
+                                #-h, --human-readable
+                                #print sizes in human readable format (e.g., 1K 234M 2G)
+                                'df -h',
                                ]
         self.fabdiagStrings = []
         self.fileStrings = []
-        self.methodStrings = []
+
+        #Methods listed here must exist in this class
+        self.methodStrings = ['getRelease']
 
         self.allStrings = [self.commandStrings, self.methodStrings, self.fileStrings, self.fabdiagStrings]
 
+    def getRelease(self):
+        return self.system.getRelease()
+
+    def eth_tool_all_interfaces():
+        pass
+
+    def Multicast_Information():
+        pass
+
+    def zz_proc_net_bonding_files():
+        pass
+
+    def zz_sys_class_net_files():
+        pass
+
+    def ib_find_bad_ports():
+        pass
+
+    def ib_mc_info_show():
+        pass
+
+    def ib_switches_FW_scan():
+        pass
     def runDiscovery(self):
         self.server_commands = [
                            self.callCommand('arp -an'),
                            self.callCommand('biosdecode'),
                            self.callCommand('blkid -c /dev/nell | sort'),
-                           self.callCommand('cat /etc/SuSE-release'),
-                           self.callCommand('cat /etc/redhat-release','chkconfig --list | sort'),
-                           self.callCommand('date'),
+
+                           #Phasing these out in favor of the Python implementation
+                           #self.callCommand('cat /etc/SuSE-release'),
+                           #self.callCommand('cat /etc/redhat-release','chkconfig --list | sort'),
+                           self.callMethod('getRelease'),
+                            self.callCommand('date'),
                            self.callCommand('df -h'),
                            self.callCommand('dmesg'),
                            self.callCommand('dmidecode'),
@@ -527,10 +554,10 @@ class App:
 
         #detect the OS and initiate the correct object representing the sysinfo-snapshot program capabilities
         if self.system.operating_system in ['Windows', 'Microsoft']:
-            self.sysinfo = SysinfoSnapshotWin()
+            self.sysinfo = SysinfoSnapshotWin(self.system)
 
         else:
-            self.sysinfo = SysinfoSnapshotUnix()
+            self.sysinfo = SysinfoSnapshotUnix(self.system)
 
         self.__configureCLI__()
 
