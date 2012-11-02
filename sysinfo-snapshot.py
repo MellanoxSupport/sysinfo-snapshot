@@ -19,6 +19,7 @@ import shlex
 import platform
 import os
 
+
 class System:
     '''
     Represents the state of the system in which the program is
@@ -44,7 +45,7 @@ class System:
         pass
 
     def getHostname(self):
-        pass
+        return self.hostname
 
     def getRelease(self):
         return self.release
@@ -547,6 +548,16 @@ class App:
             pass
         pass
 
+
+class CLI:
+    def __init__(self):
+        self.validflags = []
+
+    def addFlag(self):
+        pass
+
+    def removeFlag(self):
+        pass
 
 
 
