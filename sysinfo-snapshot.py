@@ -255,19 +255,20 @@ class SysinfoSnapshotUnix:
         SysinfoSnapshot.__init__()
         self.APPOSTYPE = 'Unix'
 
-        self.commandStrings = ['arp -an',
-                               #-n, --numeric
-                               #shows numerical addresses instead of trying to determine symbolic host, port or user names.
-                               #-a [hostname], --display [hostname]
-                               #Shows the entries of the specified hosts. If the hostname parameter is not used, all entries will be displayed. The entries will be displayed in alternate (BSD) style
-                               #Arp manipulates the kernel's ARP cache in various ways. The primary options are clearing an address mapping entry and manually setting up one. For debugging purposes, the arp program also allows a complete dump of the ARP cache.
+        self.commandStrings = [
+                                'arp -an',
+                                #-n, --numeric
+                                #shows numerical addresses instead of trying to determine symbolic host, port or user names.
+                                #-a [hostname], --display [hostname]
+                                #Shows the entries of the specified hosts. If the hostname parameter is not used, all entries will be displayed. The entries will be displayed in alternate (BSD) style
+                                #Arp manipulates the kernel's ARP cache in various ways. The primary options are clearing an address mapping entry and manually setting up one. For debugging purposes, the arp program also allows a complete dump of the ARP cache.
 
-                               'biosdecode',
+                                'biosdecode',
 
-                               #biosdecode parses the BIOS memory and prints information about all structures (or entry points) it knows of. Currently known entry point types are:
+                                #biosdecode parses the BIOS memory and prints information about all structures (or entry points) it knows of. Currently known entry point types are:
 
-                               #List block devices on the system
-                               'blkid -c /dev/null | sort',
+                                #List block devices on the system
+                                'blkid -c /dev/null | sort',
 
                                 #Grab the date, could probably be replaced by some Python library
                                 'date',
@@ -276,14 +277,127 @@ class SysinfoSnapshotUnix:
                                 #-h, --human-readable
                                 #print sizes in human readable format (e.g., 1K 234M 2G)
                                 'df -h',
+
+                                #give us a snapshot of the current kernel output log, why this and /var/log/messages?
+                                'dmesg',
+
+                                #Older version of biosdecode for older systems
+                                'dmidecode',
+
+                                #-l
+                                #List the partition tables for the specified devices and then exit. If no devices are given, those mentioned in /proc/partitions (if that exists) are used.
+                                'fdisk -l',
+
+                                #Provides information on unused memory and swap space.
+                                'free',
+
+                                #When used without argument retrieves current hostname
+                                #Phased out in favor of Python cross platform library
+                                #self.callCommand('hostname'),
+
+                                #--netcard displays information specifically about communications devices
+                                # lspci and hwinfo --pci are very similar for example
+                                # hwinfo command is a generic large dump of hw information
+                                'hwinfo --netcard',
+                                'hwinfo',
+
+                                #REQUIRES OFED
+                                'ibstat',
+                                'ibstatus',
+
+                                'ibv_devinfo',
+                                #v for verbose... why show regular version?
+                                'ibv_devinfo -v',
+
+                                #Show all Linux Network Interfaces regardless of up/down states
+                                #For old systems were ip command is not depreciated
+                                'ifconfig -a',
+
+                                #ip - show / manipulate routing, devices, policy routing and tunnels
+                                'ip a s',
+                                'ip m s',
+                                'ip n s',
+
+                                #iptables commands require triggering of the iptables daemon
+                                #iptables is listed here to explore various firewall rules on the system
+
+                                #Removed for now because of customers complaints that this is intrusive
+                                #Due to the fact that these commands trigger the iptables daemon to turn on
+
+                                #'iptables -t filter -nvL',
+                                #'iptables -t mangle -nvL',
+                                #'iptables -t nat -nvL',
+                                #'iptables-save -t filter',
+                                #'iptables-save -t mangle',
+                                #'iptables-save -t nat',
+
+                                #NO LONGER MAINTAINED
+                                #command returns a list of local locks on the system
+                                #do we really need to recover this sort of information?
+                                'lslk',
+
+                                #lsmod - program to show the status of modules in the Linux Kernel
+                                'lsmod',
+
+                                #Lists open files on the system
+                                'lsof',
+
+                                #
+                                self.callCommand('lspci'),
+                                self.callCommand('lspci -tv'),
+                                self.callCommand('lspci -tvvv'),
+                                self.callCommand('lspci -xxxx'),
+                                self.callCommand('mii-tool -vv'),
+                                self.callCommand('modprobe sq'),
+                                self.callCommand('mount'),
+                                self.callCommand('netstat -anp'),
+                                self.callCommand('netstat -i'),
+                                self.callCommand('netstat -nlp'),
+                                self.callCommand('netstat -nr'),
+                                self.callCommand('numactl --hardware'),
+                                self.callCommand('ofed_info'),
+                                self.callCommand('ompi_info'),
+                                self.callCommand('perfquery'),
+                                self.callCommand('ps xfalw'),
+                                self.callCommand('route -n'),
+                                self.callCommand('sdpnetstat -anp'),
+                                self.callCommand('sg_map -i -x'),
+                                self.callCommand('sysctl -a'),
+                                self.callCommand('ulimit -a'),
+                                self.callCommand('uname -a'),
+                                self.callCommand('uptime'),
+                                self.callCommand('zcat /proc/config.gz'),
+                                self.callMethod('zz_proc_net_bonding_files'), #implement as method
+                                self.callMethod('zz_sys_class_net_files'), #implement as method
                                ]
         self.fabdiagStrings = []
         self.fileStrings = []
 
         #Methods listed here must exist in this class
-        self.methodStrings = ['getRelease']
+        self.methodStrings = [
+
+                                #Use the Python Platform library to retrieve OS hostname
+                                'getHostname'
+
+                                #Use the Python Platform library to retrieve OS release data in a cross platform manner
+                                'getRelease',
+
+                                #Get the output of ethtool <Interface> on every system interface
+                                'eth-tool-all-interfaces',
+
+                                #Pull the ini from each interface on the system
+                                'fw-ini-dump',
+                              ]
 
         self.allStrings = [self.commandStrings, self.methodStrings, self.fileStrings, self.fabdiagStrings]
+
+
+
+    #Rogue and Orphan function implemented in order to satisfy dataset format for sysinfo
+    #Also a good place for current implementations of Python libraries for those functions
+
+    def getHostname(self):
+        return self.system.getHostname()
 
     def getRelease(self):
         return self.system.getRelease()
