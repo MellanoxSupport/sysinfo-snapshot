@@ -342,18 +342,37 @@ class SysinfoSnapshotUnix:
                                 #Lists open files on the system
                                 'lsof',
 
+                                #pci specific information gathering
+                                'lspci'
+                                'lspci -tv',
+                                'lspci -tvvv',
+                                'lspci -xxxx',
+
+                                #Display low level nic information -vv also display raw MII register contents.
+                                'mii-tool -vv',
+
+                                #-s --syslog
+                                #This option causes any error messages to go through the syslog mechanism (as LOG_DAEMON with level LOG_NOTICE) rather than to standard error. This is also automatically enabled when stderr is unavailable.
+                                #This option is passed through install or remove commands to other modprobe commands in the MODPROBE_OPTIONS environment variable.
+                                'modprobe sq',
+
+                                #Display currently mounted filesystems, cat /etc/fstab is preferable...
+                                'mount',
+
+                                #-a	Displays all active connections and the TCP and UDP ports on which the computer is listening.
+                                #-n	Displays active TCP connections, however, addresses and port numbers are expressed numerically and no attempt is made to determine names.
+                                #p protocol (Windows and BSD)	Shows connections for the protocol specified by protocol. In this case, protocol can be tcp, udp, tcpv6, or udpv6. If this parameter is used with -s to display statistics by protocol, protocol can be tcp, udp, icmp, ip, tcpv6, udpv6, icmpv6, or ipv6.
+                                #-p (Linux)	Show which processes are using which sockets (similar to -b under Windows) (you must be root to do this)
+                                'netstat -anp',
+
+                                #-i	Displays network interfaces and their statistics (not available under Windows)
+                                'netstat -i'),
+                                'netstat -nlp'),
+
+                                #-r	Displays the contents of the IP routing table. (This is equivalent to the route print command under Windows.)
+                                'netstat -nr'),
+
                                 #
-                                self.callCommand('lspci'),
-                                self.callCommand('lspci -tv'),
-                                self.callCommand('lspci -tvvv'),
-                                self.callCommand('lspci -xxxx'),
-                                self.callCommand('mii-tool -vv'),
-                                self.callCommand('modprobe sq'),
-                                self.callCommand('mount'),
-                                self.callCommand('netstat -anp'),
-                                self.callCommand('netstat -i'),
-                                self.callCommand('netstat -nlp'),
-                                self.callCommand('netstat -nr'),
                                 self.callCommand('numactl --hardware'),
                                 self.callCommand('ofed_info'),
                                 self.callCommand('ompi_info'),
