@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="39f4415b-4399-4ae4-9d89-c7c17f3d5a73" name="Default" comment="first commit">
+    <list default="true" id="39f4415b-4399-4ae4-9d89-c7c17f3d5a73" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sysinfo-snapshot.py" afterPath="$PROJECT_DIR$/sysinfo-snapshot.py" />
     </list>
     <ignored path="sysinfo-snapshot-pub.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,7 +26,7 @@
       <file leaf-file-name="sysinfo-snapshot.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sysinfo-snapshot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="345" column="39" selection-start="12596" selection-end="12603" vertical-scroll-proportion="0.32884097">
+            <state line="345" column="40" selection-start="12604" selection-end="12604" vertical-scroll-proportion="0.32884097">
               <folding>
                 <element signature="e#133#166#0" expanded="true" />
               </folding>
@@ -263,7 +264,11 @@
       <created>1352165683125</created>
       <updated>1352165683125</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="first commit">
+      <created>1352166007224</created>
+      <updated>1352166007224</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -413,7 +418,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sysinfo-snapshot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="345" column="39" selection-start="12596" selection-end="12603" vertical-scroll-proportion="0.32884097">
+        <state line="345" column="40" selection-start="12604" selection-end="12604" vertical-scroll-proportion="0.32884097">
           <folding>
             <element signature="e#133#166#0" expanded="true" />
           </folding>

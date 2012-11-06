@@ -343,7 +343,7 @@ class SysinfoSnapshotUnix:
                                 'lsof',
 
                                 #pci specific information gathering
-                                'lspci'
+                                'lspci',
                                 'lspci -tv',
                                 'lspci -tvvv',
                                 'lspci -xxxx',
