@@ -302,6 +302,7 @@ class SysinfoSnapshotUnix:
                                 'hwinfo',
 
                                 #REQUIRES OFED
+                                'ofed_info',
                                 'ibstat',
                                 'ibstatus',
 
@@ -366,34 +367,90 @@ class SysinfoSnapshotUnix:
                                 'netstat -anp',
 
                                 #-i	Displays network interfaces and their statistics (not available under Windows)
-                                'netstat -i'),
-                                'netstat -nlp'),#some random changes
+                                'netstat -i',
+                                'netstat -nlp',#some random changes
 
                                 #-r	Displays the contents of the IP routing table. (This is equivalent to the route print command under Windows.)
-                                'netstat -nr'),
+                                'netstat -nr',
 
-                                #
-                                self.callCommand('numactl --hardware'),
-                                self.callCommand('ofed_info'),
-                                self.callCommand('ompi_info'),
-                                self.callCommand('perfquery'),
-                                self.callCommand('ps xfalw'),
-                                self.callCommand('route -n'),
-                                self.callCommand('sdpnetstat -anp'),
-                                self.callCommand('sg_map -i -x'),
-                                self.callCommand('sysctl -a'),
-                                self.callCommand('ulimit -a'),
-                                self.callCommand('uname -a'),
-                                self.callCommand('uptime'),
-                                self.callCommand('zcat /proc/config.gz'),
-                                self.callMethod('zz_proc_net_bonding_files'), #implement as method
-                                self.callMethod('zz_sys_class_net_files'), #implement as method
-                               ]
-        self.fabdiagStrings = []
+                                #--hardware, -H
+                                #Show inventory of available nodes on the system.
+                                #Numactl can set up policy for a SYSV shared memory segment or a file in shmfs/hugetlbfs.
+                                'numactl --hardware',
+
+                                #ompi_info - Display information about the Open MPI installation
+                                'ompi_info',
+
+                                #perfquery uses PerfMgt GMPs to obtain the PortCounters (basic performance and error counters), PortExtendedCounters, PortXmitDataSL, or PortRcvDataSL from the PMA at the node/port specified. Optionally shows aggregated counters for all ports of node. Also, optionally, reset after read, or only reset counters.
+                                #Note: In PortCounters, PortCountersExtended, PortXmitDataSL, and PortRcvDataSL, components that represent Data (e.g. PortXmitData and PortRcvData) indicate octets divided by 4 rather than just octets.
+                                'perfquery',
+
+                                #list process information...
+                                'ps xfalw',
+
+                                #list local routes without their hostnames
+                                #-n
+                                #show numerical addresses instead of trying to determine symbolic host names. This is useful if you are trying
+                                #to determine why the route to your nameserver has vanished.
+                                'route -n',
+
+                                #netstat for sockets direct protocol
+                                'sdpnetstat -anp',
+
+                                #Sometimes it is difficult to determine which SCSI device a sg device name (e.g. /dev/sg0) refers to. This command loops through the sg devices and finds the corresponding SCSI disk, cdrom or tape device name (if any). Scanners are an example of SCSI devices that have no alternate SCSI device name apart from their sg device name.
+                                'sg_map -i -x',
+
+                                #sysctl - configure kernel parameters at runtime
+                                #-a
+                                #Display all values currently available.
+                                'sysctl -a',
+
+                                #User limits - limit the use of system-wide resources.
+                                #-a report all limits available
+                                'ulimit -a',
+
+                                #displays information about the kernel version
+                                'uname -a',
+
+                                #displays time the system has been up
+                                'uptime',
+
+                                #???
+                                'zcat /proc/config.gz'
+                                ]
+
+        self.fabdiagStrings = [
+
+                                'ibdiagnet',
+                                self.callCommand('ibcheckerrors -nocolor'),
+                                self.callCommand('ibhosts'),
+                                self.callCommand('ibnetdiscover'),
+                                self.callCommand('ibnetdiscover -p'),
+                                self.callCommand('ibswitches'),
+                                self.callCommand('sm-status'),
+                                self.callCommand('sm_master_is'),
+                                self.callCommand('sminfo'),
+        ]
         self.fileStrings = []
 
         #Methods listed here must exist in this class
         self.methodStrings = [
+
+                                'ib_switches_FW_scan',
+
+                                'Multicast_Information',
+
+                                'ib-find-bad-ports',
+
+                                'ib-find-disabled-ports',
+
+                                'ib-mc-info-show',
+
+                                'ib-topology-viewer',
+
+                                'zz_sys_class_net_files',
+
+                                'zz_proc_net_bonding_files',
 
                                 #Use the Python Platform library to retrieve OS hostname
                                 'getHostname'
@@ -408,7 +465,7 @@ class SysinfoSnapshotUnix:
                                 'fw-ini-dump',
                               ]
 
-        self.allStrings = [self.commandStrings, self.methodStrings, self.fileStrings, self.fabdiagStrings]
+        self.allStrings = self.commandStrings + self.methodStrings + self.fileStrings + self.fabdiagStrings
 
 
 
@@ -442,88 +499,6 @@ class SysinfoSnapshotUnix:
     def ib_switches_FW_scan():
         pass
     def runDiscovery(self):
-        self.server_commands = [
-                           self.callCommand('arp -an'),
-                           self.callCommand('biosdecode'),
-                           self.callCommand('blkid -c /dev/nell | sort'),
-
-                           #Phasing these out in favor of the Python implementation
-                           #self.callCommand('cat /etc/SuSE-release'),
-                           #self.callCommand('cat /etc/redhat-release','chkconfig --list | sort'),
-                           self.callMethod('getRelease'),
-                            self.callCommand('date'),
-                           self.callCommand('df -h'),
-                           self.callCommand('dmesg'),
-                           self.callCommand('dmidecode'),
-                           self.callMethod('eth-tool-all-interfaces'),#implemented as method
-                           self.callCommand('fdisk -l'),
-                           self.callCommand('free'),
-                           self.callCommand('fw-ini-dump'),
-                           self.callCommand('hostname'),
-                           self.callCommand('hwinfo --netcard'),
-                           self.callCommand('ibstat'),
-                           self.callCommand('ibstatus'),
-                           self.callCommand('ibv_devinfo'),
-                           self.callCommand('ibv_devinfo -v'),
-                           self.callCommand('ifconfig -a'),
-                           self.callCommand('ip a s'),
-                           self.callCommand('ip m s'),
-                           self.callCommand('ip n s'),
-                           self.callCommand('iptables -t filter -nvL'),
-                           self.callCommand('iptables -t mangle -nvL'),
-                           self.callCommand('iptables -t nat -nvL'),
-                           self.callCommand('iptables-save -t filter'),
-                           self.callCommand('iptables-save -t mangle'),
-                           self.callCommand('iptables-save -t nat'),
-                           self.callCommand('lslk'),
-                           self.callCommand('lsmod'),
-                           self.callCommand('lsof'),
-                           self.callCommand('lspci'),
-                           self.callCommand('lspci -tv'),
-                           self.callCommand('lspci -tvvv'),
-                           self.callCommand('lspci -xxxx'),
-                           self.callCommand('mii-tool -vv'),
-                           self.callCommand('modprobe sq'),
-                           self.callCommand('mount'),
-                           self.callCommand('netstat -anp'),
-                           self.callCommand('netstat -i'),
-                           self.callCommand('netstat -nlp'),
-                           self.callCommand('netstat -nr'),
-                           self.callCommand('numactl --hardware'),
-                           self.callCommand('ofed_info'),
-                           self.callCommand('ompi_info'),
-                           self.callCommand('perfquery'),
-                           self.callCommand('ps xfalw'),
-                           self.callCommand('route -n'),
-                           self.callCommand('sdpnetstat -anp'),
-                           self.callCommand('sg_map -i -x'),
-                           self.callCommand('sysctl -a'),
-                           self.callCommand('ulimit -a'),
-                           self.callCommand('uname -a'),
-                           self.callCommand('uptime'),
-                           self.callCommand('zcat /proc/config.gz'),
-                           self.callMethod('zz_proc_net_bonding_files'), #implement as method
-                           self.callMethod('zz_sys_class_net_files'), #implement as method
-                           ]
-
-        self.fabric_diagnostics = [
-                            self.callMethod('Multicast_Information'),#implemented as method
-                            #self.callCommand('ib-find-bad-ports'),
-                            #self.callMethod('ib-find-disabled-ports'),
-                            #self.callCommand('ib-mc-info-show'),
-                            #self.callCommand('ib-topology-viewer'),
-                            self.callCommand('ibdiagnet'),
-                            self.callCommand('ib_switches_FW_scan'),
-                            self.callCommand('ibcheckerrors -nocolor'),
-                            self.callCommand('ibhosts'),
-                            self.callCommand('ibnetdiscover'),
-                            self.callCommand('ibnetdiscover -p'),
-                            self.callCommand('ibswitches'),
-                            self.callCommand('sm-status'),
-                            self.callCommand('sm_master_is'),
-                            self.callCommand('sminfo'),
-                            ]
-
         self.files = [
                             self.getFileText('/etc/hosts'),
                             self.getFileText('/etc/hosts.allow'),
