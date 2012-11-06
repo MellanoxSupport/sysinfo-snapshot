@@ -367,7 +367,7 @@ class SysinfoSnapshotUnix:
 
                                 #-i	Displays network interfaces and their statistics (not available under Windows)
                                 'netstat -i'),
-                                'netstat -nlp'),
+                                'netstat -nlp'),#some random changes
 
                                 #-r	Displays the contents of the IP routing table. (This is equivalent to the route print command under Windows.)
                                 'netstat -nr'),
