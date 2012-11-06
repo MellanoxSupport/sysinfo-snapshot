@@ -421,12 +421,25 @@ class SysinfoSnapshotUnix:
 
         self.fabdiagStrings = [
 
+                                #utility for generic fabric sweep. gets counters only during run
                                 'ibdiagnet',
-                                self.callCommand('ibcheckerrors -nocolor'),
-                                self.callCommand('ibhosts'),
-                                self.callCommand('ibnetdiscover'),
-                                self.callCommand('ibnetdiscover -p'),
-                                self.callCommand('ibswitches'),
+
+                                #a lower level counter checker.
+                                'ibcheckerrors -nocolor',
+
+                                #detect all hosts inband on the fabric
+                                'ibhosts',
+
+                                #get a topology layout of all hosts on the fabric
+                                'ibnetdiscover',
+
+                                #Obtain a ports report which is a list of connected ports with relevant information (like LID, portnum, GUID, width, speed, and NodeDescription).
+                                'ibnetdiscover -p',
+
+                                #display all infiniband switches
+                                'ibswitches',
+
+
                                 self.callCommand('sm-status'),
                                 self.callCommand('sm_master_is'),
                                 self.callCommand('sminfo'),
