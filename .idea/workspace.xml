@@ -25,7 +25,7 @@
       <file leaf-file-name="sysinfo-snapshot.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sysinfo-snapshot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="348" column="44" selection-start="12741" selection-end="12741" vertical-scroll-proportion="-0.43396226">
+            <state line="369" column="48" selection-start="14570" selection-end="14570" vertical-scroll-proportion="0.5283019">
               <folding>
                 <element signature="e#133#166#0" expanded="true" />
               </folding>
@@ -271,7 +271,11 @@
       <created>1352166027072</created>
       <updated>1352166027072</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="first commit">
+      <created>1352166231101</created>
+      <updated>1352166231101</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -421,7 +425,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sysinfo-snapshot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="348" column="44" selection-start="12741" selection-end="12741" vertical-scroll-proportion="-0.43396226">
+        <state line="369" column="48" selection-start="14570" selection-end="14570" vertical-scroll-proportion="0.5283019">
           <folding>
             <element signature="e#133#166#0" expanded="true" />
           </folding>
