@@ -305,10 +305,12 @@ class SysinfoSnapshotUnix:
                                 'ofed_info',
                                 'ibstat',
                                 'ibstatus',
-
                                 'ibv_devinfo',
+                                'sminfo',
+
                                 #v for verbose... why show regular version?
                                 'ibv_devinfo -v',
+
 
                                 #Show all Linux Network Interfaces regardless of up/down states
                                 #For old systems were ip command is not depreciated
@@ -417,7 +419,7 @@ class SysinfoSnapshotUnix:
 
                                 #???
                                 'zcat /proc/config.gz'
-                                ]
+                            ]
 
         self.fabdiagStrings = [
 
@@ -438,28 +440,126 @@ class SysinfoSnapshotUnix:
 
                                 #display all infiniband switches
                                 'ibswitches',
+                            ]
+        self.fileStrings = [
+                                #hosts files
+                                '/etc/hosts',
+                                '/etc/hosts.allow',
+                                '/etc/hosts.deny',
 
+                                #Same as System.getRelease()
+                                # Phasing this out
+                                # '/etc/issue',
 
-                                self.callCommand('sm-status'),
-                                self.callCommand('sm_master_is'),
-                                self.callCommand('sminfo'),
-        ]
-        self.fileStrings = []
+                                #Kernel Module configurations
+                                '/etc/modprobe.conf',
+                                '/etc/modprobe.d/blacklist-compat',
+                                '/etc/modprobe.d/blacklist-firewire',
+                                '/etc/modprobe.d/blacklist.conf',
+                                '/etc/modprobe.d/mlx4_en.conf',
+                                '/etc/modprobe.d/modprobe.conf.dist',
+
+                                #DNS configurations
+                                '/etc/resolv.conf',
+
+                                #config for Linux Interfaces, should grab all...
+                                '/etc/sysconfig/network-scripts/ifcfg-bond0',
+                                '/etc/sysconfig/network-scripts/ifcfg-eth0',
+                                '/etc/sysconfig/network-scripts/ifcfg-eth1',
+                                '/etc/sysconfig/network-scripts/ifcfg-ib0',
+                                '/etc/sysconfig/network-scripts/ifcfg-lo',
+
+                                #This file is used primarily for diagnosing memory fragmentation issues. Using the
+                                # buddy algorithm, each column represents the number of pages of a certain order
+                                # (a certain size) that are available at any given time. For example, for zone DMA
+                                # (direct memory access), there are 90 of 2^(0*PAGE_SIZE) chunks of memory. Similarly,
+                                # there are 6 of 2^(1*PAGE_SIZE) chunks, and 2 of 2^(2*PAGE_SIZE) chunks of memory
+                                # available.
+                                '/proc/buddyinfo',
+
+                                #This file shows the parameters passed to the kernel at the time it is started.
+                                # A sample /proc/cmdline file looks like the following:
+                                # ro root=/dev/VolGroup00/LogVol00 rhgb quiet 3
+                                #This tells us that the kernel is mounted read-only (signified by (ro)), located on the
+                                # first logical volume (LogVol00) of the first volume group (/dev/VolGroup00). LogVol00
+                                # is the equivalent of a disk partition in a non-LVM system (Logical Volume Management)
+                                # , just as /dev/VolGroup00 is similar in concept to /dev/hda1, but much more extensible
+                                # .
+                                '/proc/cmdline',
+
+                                #This virtual file identifies the type of processor used by your system.
+                                '/proc/cpuinfo',
+
+                                #This file lists all installed cryptographic ciphers used by the Linux kernel,
+                                # including additional details for each
+                                '/proc/crypto',
+
+                                #This file displays the various character and block devices currently configured
+                                # (not including devices whose modules are not loaded)
+                                '/proc/devices',
+
+                                #Field 1 -- # of reads issued
+                                #Field 2 -- # of reads merged, field 6 -- # of writes merged
+                                #Field 3 -- # of sectors read
+                                #Field 4 -- # of milliseconds spent reading
+                                #Field 5 -- # of writes completed
+                                #Field 7 -- # of sectors written
+                                #Field 8 -- # of milliseconds spent writing
+                                #Field 9 -- # of I/Os currently in progress
+                                #Field 10 -- # of milliseconds spent doing I/Os
+                                #Field 11 -- weighted # of milliseconds spent doing I/Os
+                                '/proc/diskstats',
+
+                                #Looking at /proc/dma might not give you the information that you want, since it only
+                                # contains currently assigned dma channels for isa devices.
+                                #pci devices that are using dma are not listed in /proc/dma, in this case dmesg can be
+                                # useful. The screenshot below shows that during boot the parallel port received dma
+                                # channel 1, and the Infrared port received dma channel 3.
+                                '/proc/dma',
+
+                                #This file lists the execution domains currently supported by the Linux kernel,
+                                # along with the range of personalities they support.
+                                '/proc/execdomains',
+                                '/proc/scsi/scsi',
+                                '/proc/slabinfo',
+                                '/proc/stat',
+                                '/proc/swaps',
+                                '/proc/uptime',
+                                '/proc/vmstat',
+                                '/proc/zoneinfo',
+                                '/sys/class/infiniband/*/board_id',
+                                '/sys/class/infiniband/*/fw_ver',
+                                '/sys/class/infiniband/*/hca_type',
+                                '/sys/class/infiniband/*/hw_rev',
+                                '/sys/class/infiniband/*/node_desc',
+                                '/sys/class/infiniband/*/node_guid',
+                                '/sys/class/infiniband/*/node_type',
+                                '/sys/class/infiniband/*/sys_image_guid',
+                                '/sys/class/infiniband/*/uevent',
+                                '/var/log/messages',
+                            ]
 
         #Methods listed here must exist in this class
         self.methodStrings = [
 
+                                #check whether sm is alive and what it is
+                                'sm-status',
+
+                                #check who the sm master is as opposed to any slave sm
+                                'sm_master_is',
+
+                                #scan the firmware for all inband infiniband switches
                                 'ib_switches_FW_scan',
 
                                 'Multicast_Information',
 
-                                'ib-find-bad-ports',
+                                'ib_find_bad_ports',
 
-                                'ib-find-disabled-ports',
+                                'ib_find_disabled_ports',
 
-                                'ib-mc-info-show',
+                                'ib_mc_info_show',
 
-                                'ib-topology-viewer',
+                                'ib_topology_viewer',
 
                                 'zz_sys_class_net_files',
 
@@ -472,10 +572,10 @@ class SysinfoSnapshotUnix:
                                 'getRelease',
 
                                 #Get the output of ethtool <Interface> on every system interface
-                                'eth-tool-all-interfaces',
+                                'eth_tool_all_interfaces',
 
                                 #Pull the ini from each interface on the system
-                                'fw-ini-dump',
+                                'fw_ini_dump',
                               ]
 
         self.allStrings = self.commandStrings + self.methodStrings + self.fileStrings + self.fabdiagStrings
@@ -491,70 +591,32 @@ class SysinfoSnapshotUnix:
     def getRelease(self):
         return self.system.getRelease()
 
-    def eth_tool_all_interfaces():
+    def eth_tool_all_interfaces(self):
         pass
 
-    def Multicast_Information():
+    def Multicast_Information(self):
         pass
 
-    def zz_proc_net_bonding_files():
+    def zz_proc_net_bonding_files(self):
         pass
 
-    def zz_sys_class_net_files():
+    def zz_sys_class_net_files(self):
         pass
 
-    def ib_find_bad_ports():
+    def ib_find_bad_ports(self):
         pass
 
-    def ib_mc_info_show():
+    def ib_mc_info_show(self):
         pass
 
-    def ib_switches_FW_scan():
+    def ib_switches_FW_scan(self):
         pass
+
+    def sm_master_is(self):
+        pass
+
     def runDiscovery(self):
-        self.files = [
-                            self.getFileText('/etc/hosts'),
-                            self.getFileText('/etc/hosts.allow'),
-                            self.getFileText('/etc/hosts.deny'),
-                            self.getFileText('/etc/issue'),
-                            self.getFileText('/etc/modprobe.conf'),
-                            self.getFileText('/etc/modprobe.d/blacklist-compat'),
-                            self.getFileText('/etc/modprobe.d/blacklist-firewire'),
-                            self.getFileText('/etc/modprobe.d/blacklist.conf'),
-                            self.getFileText('/etc/modprobe.d/mlx4_en.conf'),
-                            self.getFileText('/etc/modprobe.d/modprobe.conf.dist'),
-                            self.getFileText('/etc/resolv.conf'),
-                            self.getFileText('/etc/sysconfig/network-scripts/ifcfg-bond0'),
-                            self.getFileText('/etc/sysconfig/network-scripts/ifcfg-eth0'),
-                            self.getFileText('/etc/sysconfig/network-scripts/ifcfg-eth1'),
-                            self.getFileText('/etc/sysconfig/network-scripts/ifcfg-ib0'),
-                            self.getFileText('/etc/sysconfig/network-scripts/ifcfg-lo'),
-                            self.getFileText('/proc/buddyinfo'),
-                            self.getFileText('/proc/cmdline'),
-                            self.getFileText('/proc/cpuinfo'),
-                            self.getFileText('/proc/crypto'),
-                            self.getFileText('/proc/devices'),
-                            self.getFileText('/proc/deskstats'),
-                            self.getFileText('/proc/dma'),
-                            self.getFileText('/proc/execdomains'),
-                            self.getFileText('/proc/scsi/scsi'),
-                            self.getFileText('/proc/slabinfo'),
-                            self.getFileText('/proc/stat'),
-                            self.getFileText('/proc/swaps'),
-                            self.getFileText('/proc/uptime'),
-                            self.getFileText('/proc/vmstat'),
-                            self.getFileText('/proc/zoneinfo'),
-                            self.getFileText('/sys/class/infiniband/*/board_id'),
-                            self.getFileText('/sys/class/infiniband/*/fw_ver'),
-                            self.getFileText('/sys/class/infiniband/*/hca_type'),
-                            self.getFileText('/sys/class/infiniband/*/hw_rev'),
-                            self.getFileText('/sys/class/infiniband/*/node_desc'),
-                            self.getFileText('/sys/class/infiniband/*/node_guid'),
-                            self.getFileText('/sys/class/infiniband/*/node_type'),
-                            self.getFileText('/sys/class/infiniband/*/sys_image_guid'),
-                            self.getFileText('/sys/class/infiniband/*/uevent'),
-                            self.getFileText('/var/log/messages'),
-                            ]
+
 
     def getFileText(self, filename):
         '''
@@ -584,11 +646,11 @@ class SysinfoSnapshotUnix:
     #File output types, each version of the program will have to implement it's own way of packaging output
 
 
-    def gzip(file, newfilename):
+    def gzip(self, file, newfilename):
         f = open(file,r)
         result = UnixCommand('gzip {target} {destination}'.format(target = file, destination = newfilename))
 
-    def dumpHTML(html, newfilename):
+    def dumpHTML(self, html, newfilename):
         f = open(newfilename+'.html', 'w')
         f.write(html)
         f.close()
