@@ -258,14 +258,19 @@ class SysinfoSnapshotUnix:
         self.commandStrings = [
                                 'arp -an',
                                 #-n, --numeric
-                                #shows numerical addresses instead of trying to determine symbolic host, port or user names.
+                                #shows numerical addresses instead of trying to determine symbolic host, port or user
+                                # names.
                                 #-a [hostname], --display [hostname]
-                                #Shows the entries of the specified hosts. If the hostname parameter is not used, all entries will be displayed. The entries will be displayed in alternate (BSD) style
-                                #Arp manipulates the kernel's ARP cache in various ways. The primary options are clearing an address mapping entry and manually setting up one. For debugging purposes, the arp program also allows a complete dump of the ARP cache.
+                                #Shows the entries of the specified hosts. If the hostname parameter is not used, all
+                                # entries will be displayed. The entries will be displayed in alternate (BSD) style
+                                #Arp manipulates the kernel's ARP cache in various ways. The primary options are
+                                # clearing an address mapping entry and manually setting up one. For debugging
+                                # purposes, the arp program also allows a complete dump of the ARP cache.
 
                                 'biosdecode',
 
-                                #biosdecode parses the BIOS memory and prints information about all structures (or entry points) it knows of. Currently known entry point types are:
+                                #biosdecode parses the BIOS memory and prints information about all structures
+                                # (or entry points) it knows of.
 
                                 #List block devices on the system
                                 'blkid -c /dev/null | sort',
@@ -273,7 +278,8 @@ class SysinfoSnapshotUnix:
                                 #Grab the date, could probably be replaced by some Python library
                                 'date',
 
-                                #Show information about the file system on which each FILE resides, or all file systems by default.
+                                #Show information about the file system on which each FILE resides, or all file systems
+                                # by default.
                                 #-h, --human-readable
                                 #print sizes in human readable format (e.g., 1K 234M 2G)
                                 'df -h',
@@ -285,7 +291,8 @@ class SysinfoSnapshotUnix:
                                 'dmidecode',
 
                                 #-l
-                                #List the partition tables for the specified devices and then exit. If no devices are given, those mentioned in /proc/partitions (if that exists) are used.
+                                #List the partition tables for the specified devices and then exit. If no devices are
+                                # given, those mentioned in /proc/partitions (if that exists) are used.
                                 'fdisk -l',
 
                                 #Provides information on unused memory and swap space.
@@ -355,36 +362,52 @@ class SysinfoSnapshotUnix:
                                 'mii-tool -vv',
 
                                 #-s --syslog
-                                #This option causes any error messages to go through the syslog mechanism (as LOG_DAEMON with level LOG_NOTICE) rather than to standard error. This is also automatically enabled when stderr is unavailable.
-                                #This option is passed through install or remove commands to other modprobe commands in the MODPROBE_OPTIONS environment variable.
+                                #This option causes any error messages to go through the syslog mechanism
+                                # (as LOG_DAEMON with level LOG_NOTICE) rather than to standard error. This is also
+                                # automatically enabled when stderr is unavailable.
+                                #This option is passed through install or remove commands to other modprobe commands
+                                # in the MODPROBE_OPTIONS environment variable.
                                 'modprobe sq',
 
                                 #Display currently mounted filesystems, cat /etc/fstab is preferable...
                                 'mount',
 
-                                #-a	Displays all active connections and the TCP and UDP ports on which the computer is listening.
-                                #-n	Displays active TCP connections, however, addresses and port numbers are expressed numerically and no attempt is made to determine names.
-                                #p protocol (Windows and BSD)	Shows connections for the protocol specified by protocol. In this case, protocol can be tcp, udp, tcpv6, or udpv6. If this parameter is used with -s to display statistics by protocol, protocol can be tcp, udp, icmp, ip, tcpv6, udpv6, icmpv6, or ipv6.
-                                #-p (Linux)	Show which processes are using which sockets (similar to -b under Windows) (you must be root to do this)
+                                #-a	Displays all active connections and the TCP and UDP ports on which the computer
+                                # is listening.
+                                #-n	Displays active TCP connections, however, addresses and port numbers are expressed
+                                # numerically and no attempt is made to determine names.
+                                #p protocol (Windows and BSD)	Shows connections for the protocol specified by
+                                # protocol. In this case, protocol can be tcp, udp, tcpv6, or udpv6. If this parameter
+                                # is used with -s to display statistics by protocol, protocol can be tcp, udp, icmp,
+                                # ip, tcpv6, udpv6, icmpv6, or ipv6.
+                                #-p (Linux)	Show which processes are using which sockets (similar to -b under Windows)
+                                # (you must be root to do this)
                                 'netstat -anp',
 
                                 #-i	Displays network interfaces and their statistics (not available under Windows)
                                 'netstat -i',
                                 'netstat -nlp',#some random changes
 
-                                #-r	Displays the contents of the IP routing table. (This is equivalent to the route print command under Windows.)
+                                #-r	Displays the contents of the IP routing table. (This is equivalent to the route
+                                # print command under Windows.)
                                 'netstat -nr',
 
                                 #--hardware, -H
                                 #Show inventory of available nodes on the system.
-                                #Numactl can set up policy for a SYSV shared memory segment or a file in shmfs/hugetlbfs.
+                                #Numactl can set up policy for a SYSV shared memory segment or a file
+                                # in shmfs/hugetlbfs.
                                 'numactl --hardware',
 
                                 #ompi_info - Display information about the Open MPI installation
                                 'ompi_info',
 
-                                #perfquery uses PerfMgt GMPs to obtain the PortCounters (basic performance and error counters), PortExtendedCounters, PortXmitDataSL, or PortRcvDataSL from the PMA at the node/port specified. Optionally shows aggregated counters for all ports of node. Also, optionally, reset after read, or only reset counters.
-                                #Note: In PortCounters, PortCountersExtended, PortXmitDataSL, and PortRcvDataSL, components that represent Data (e.g. PortXmitData and PortRcvData) indicate octets divided by 4 rather than just octets.
+                                #perfquery uses PerfMgt GMPs to obtain the PortCounters (basic performance and error
+                                # counters), PortExtendedCounters, PortXmitDataSL, or PortRcvDataSL from the PMA at
+                                # the node/port specified. Optionally shows aggregated counters for all ports of node.
+                                # Also, optionally, reset after read, or only reset counters.
+                                #Note: In PortCounters, PortCountersExtended, PortXmitDataSL, and PortRcvDataSL,
+                                # components that represent Data (e.g. PortXmitData and PortRcvData) indicate octets
+                                # divided by 4 rather than just octets.
                                 'perfquery',
 
                                 #list process information...
@@ -392,14 +415,19 @@ class SysinfoSnapshotUnix:
 
                                 #list local routes without their hostnames
                                 #-n
-                                #show numerical addresses instead of trying to determine symbolic host names. This is useful if you are trying
+                                #show numerical addresses instead of trying to determine symbolic host names.
+                                # This is useful if you are trying
                                 #to determine why the route to your nameserver has vanished.
                                 'route -n',
 
                                 #netstat for sockets direct protocol
                                 'sdpnetstat -anp',
 
-                                #Sometimes it is difficult to determine which SCSI device a sg device name (e.g. /dev/sg0) refers to. This command loops through the sg devices and finds the corresponding SCSI disk, cdrom or tape device name (if any). Scanners are an example of SCSI devices that have no alternate SCSI device name apart from their sg device name.
+                                #Sometimes it is difficult to determine which SCSI device a sg device name
+                                # (e.g. /dev/sg0) refers to. This command loops through the sg devices and finds the
+                                # corresponding SCSI disk, cdrom or tape device name (if any). Scanners are an example
+                                # of SCSI devices that have no alternate SCSI device name apart from their sg device
+                                # name.
                                 'sg_map -i -x',
 
                                 #sysctl - configure kernel parameters at runtime
@@ -435,7 +463,8 @@ class SysinfoSnapshotUnix:
                                 #get a topology layout of all hosts on the fabric
                                 'ibnetdiscover',
 
-                                #Obtain a ports report which is a list of connected ports with relevant information (like LID, portnum, GUID, width, speed, and NodeDescription).
+                                #Obtain a ports report which is a list of connected ports with relevant information
+                                # (like LID, portnum, GUID, width, speed, and NodeDescription).
                                 'ibnetdiscover -p',
 
                                 #display all infiniband switches
@@ -615,7 +644,20 @@ class SysinfoSnapshotUnix:
     def sm_master_is(self):
         pass
 
+    def fw_ini_dump(self):
+        pass
+
+    def ib_topology_viewer(self):
+        pass
+
+    def ib_mc_info_show(self):
+        pass
+
+    def sm_status(self):
+        pass
+
     def runDiscovery(self):
+        pass
 
 
     def getFileText(self, filename):
@@ -742,6 +784,7 @@ class App:
         else:
             self.sysinfo = SysinfoSnapshotUnix(self.system)
 
+        self.__configureApp__(self.sysinfo)
         self.__configureCLI__()
 
         #Get all application configuration parameters needed to execute the app, is it running in GUI mode? CLI with options?
@@ -751,6 +794,10 @@ class App:
         '''
         Add support and dispatch for all flags
         '''
+        pass
+
+    #handler for sysinfo configuration after instantiation
+    def __configureApp__(self, sysinfo):
         pass
 
     def __getApplicationConfig__(self):
