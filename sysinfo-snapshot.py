@@ -10,6 +10,8 @@ Dependencies:
     Windows:
     WinOF:
 
+    Python:
+        netifaces - http://alastairs-place.net/projects/netifaces/ (pip install netifaces)
 
 @author: luis
 '''
@@ -788,36 +790,3 @@ class App:
         Add support and dispatch for all flags
         '''
         pass
-
-    #handler for sysinfo configuration after instantiation
-    def __configureApp__(self, sysinfo):
-        pass
-
-    def __getApplicationConfig__(self):
-        if self.sysinfo.APPOSTYPE == 'Unix':
-            pass
-        pass
-
-
-class CLI:
-    def __init__(self):
-        self.validflags = []
-
-    def addFlag(self):
-        pass
-
-    def removeFlag(self):
-        pass
-
-
-
-
-
-
-
-
-
-def testsysteminformation():
-    s = System()
-    print s.getRelease()
-testsysteminformation()
