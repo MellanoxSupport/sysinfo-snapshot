@@ -38,17 +38,21 @@ class System:
         #OS environment variables in a dictionary
         self.env = os.environ
 
-    def getPath(self):
-        pass
-
-    def getDate(self):
-        pass
+    def getSystem(self):
+        return self.system
 
     def getHostname(self):
         return self.hostname
 
+    def getKernelVersion(self):
+        return self.kernel_version
+
     def getRelease(self):
         return self.release
+
+    def getCPUArchitecture(self):
+        return self.CPU_architecture
+
 
 class Command:
     def __init__(self, cmd, name, TIMEOUT = 100):
@@ -75,7 +79,7 @@ class UnixCommand(Command):
         This is intentionally a blocking command, it will not return until the command has ended.
         '''
         proccess = subprocess.Popen(shlex.split(cmd))
-        process.wait()
+        proccess.wait()
         out, err = process.communicate()
         self.lastout = out
         return out, err
@@ -115,51 +119,84 @@ class IdentityService:
         return None
 
 class SysHTMLGenerator:
-    def __init__(self, hostname, iterablecontent, sysinfoinstance, idservice):
-        self.idservice = idservice
+    def __init__(self, hostname, iterablecontent, sysinfoinstance):
         self.sysinfo = sysinfoinstance
         self.hostname = hostname
         self.iterablecontent = iterablecontent
 
+    def constructPage(self):
+        page = '''
+                <html>
+                    <head>
+                    {title}
+                    </head>
+
+                    <body>
+                        <pre>
+                        {index}
+                        <h2>Server Commands:</h2>
+                        {ServerCommandTable}
+                        <h2>Network Information:</h2>
+                        {NetworkCommandTable}
+                        <h2>Files Information:</h2>
+                        {ServerFilesTable}
+
+                        <h2>Server Commands:</h2>
+                        {CommandsOutput}
+                        <h2>Network Information:</h2>
+                        {FabricDiagnosticsOutput}
+                        <h2>Files Information:</h2>
+                        {FilesOutput}
+
+                        </pre>
+                    </body>
+                </html>
+               '''.format(
+            title = self.generateTitle(self.hostname),
+            index = self.generateIndex(),
+
+            ServerCommandTable = self.generateTableSections(self.sysinfo.server_commands),
+            NetworkCommandTable = self.generateTableSections(self.sysinfo.fabric_diagnostics),
+            ServerFilesTable = self.generateTableSections(self.sysinfo.files),
+            CommandsOutput = self.generateOutputSections(self.sysinfo.server_commands),
+
+            FabricDiagnosticsOutput = self.generateOutputSections(self.sysinfo.fabric_diagnostics),
+            FilesOutput = self.generateOutputSections(self.sysinfo.files),
+        )
+        return page
 
     def generateSectionFooter(self, previous, originsection, next):
-        foot = """<small><a href=\"#{previoussection}\">[&lt;&lt;prev]</a></small> 
-                          <small><a href=\"{index}\">[back to index]</a></small> 
-                          <small><a href=\"{nextsection}">[next>>]</a></small>
-               """.format(previoussection = previous,
-                          index = originsection,
-                          nextsection = next)
+        foot = '''
+                <small><a href=\"#{previoussection}\">[&lt;&lt;prev]</a></small>
+                <small><a href=\"#{index}\">[back to index]</a></small>
+                <small><a href=\"#{nextsection}">[next>>]</a></small>
+               '''.format(
+            previoussection = previous,
+            index = originsection,
+            nextsection = next,
+        )
         return foot
 
     def generateTitle(self, hostname):
         return "<title>{hostn}'s Diagnostics</title>".format(hostn = hostname)
 
-    #noinspection PyUnreachableCode,PyUnreachableCode,PyUnreachableCode,PyUnreachableCode,PyUnreachableCode
     def generateIndex(self):
         out = '''
-<a name="index"></a>
-<h1>Mellanox Technologies</h1>
-<a name="index"></a>
-<h2>System Information Snapshot Utility</h2>
-<a name="index"></a>
-<h2>Version: 0.1</h2>
-<hr>
+                <a name="index"></a>
+                    <h1>
+                    Mellanox Technologies
+                    </h1>
+                <a name="index"></a>
+                    <h2>
+                    System Information Snapshot Utility
+                    </h2>
+                <a name="index"></a>
+                    <h2>
+                    Version: 0.1
+                    </h2>
+                <hr>
               '''
         return out
-
-    def generateTableSection(self, sysinfo_data_structure):
-        html += "<h2>{sectiontitle}\n</h2>".format(sectiontitle = sysinfo_data_structure.getTableTitle())
-        c += 1
-        if c >= section_split_delimiter:
-            section_split_delimiter += section_split_delimiter
-            html += "</tr>\n<tr>"
-        html += '''
-<td width="25%">
-<a href="#{id}">{content}</a>
-</td>
-                '''.format(id = element.getId(), content = sysinfo_data_structure.getOutput())
-        html += "</tbody>\n</table>"
-        return html
 
     def generateTableSections(self, sysinfo_data_structure_list):
         '''
@@ -187,73 +224,40 @@ class SysHTMLGenerator:
             bgcolor = "#E0E0FF",
             width = "100",
             )
+
         #elements here are unpackaged sysinfostructs
         for element in sysinfo_data_structure_list:
-            html += self.generateTableSection(element)
-        html += self.generateSectionFooter(sysinfo_data_structure.getId() - 1, 'index', sysinfo_data_structure.getId() + 1)
+            html += '''
+                <td width = 25%>
+                    <a href=#\"{secname}\">{elementname}</a>
+                </td>
+                    '''.format(
+                secname = element.getSectionName(),
+                elementname = element.getName(),
+            )
+            if c > 4:
+                html += '''
+                </tr>
+                <tr>
+                        '''
         return html
 
-
-    def generateOutputSection(self, sysinfo_data_structure):
-        html = ''
-        html += self.generateSectionFooter(sysinfo_data_structure.getId() - 1, 'index', sysinfo_data_structure.getId() + 1)
-
-
-    def generateOutputSections(self, sysinfo_data_structure_list):
-        for element in sysinfo_data_structure_list:
-            self.generateOutputSection(element)
-
-    def constructPage(self):
-        page = '''
-<html>
-    <head>
-    {title}
-    </head>
-
-    <body>
-        <pre>
-        {index}
-        {ServerCommandTable}
-        {NetworkCommandTable}
-        {ServerFilesTable}
-
-        {CommandsOutput}
-        {FabricDiagnosticsOutput}
-        {FilesOutput}
-        </pre>
-    </body>
-</html>
-               '''.format(title = self.generateTitle(self.hostname),
-
-                          index = self.generateIndex(),
-
-                          ServerCommandTable = self.generateTableSections(self.sysinfo.server_commands),
-
-                          NetworkCommandTable = self.generateTableSections(self.sysinfo.fabric_diagnostics),
-
-                          ServerFilesTable = self.generateTableSections(self.sysinfo.files),
-
-                          CommandsOutput = self.generateOutputSections(self.sysinfo.server_commands),
-
-                          FabricDiagnosticsOutput = self.generateOutputSections(self.sysinfo.fabric_diagnostics),
-
-                          FilesOutput = self.generateOutputSections(self.sysinfo.files),
-                          )
-        return page
+    def generateOutputSection(self):
+        pass
 
 class SysinfoSnapshot:
     def __init__(self, system = None):
         self.factory = SysInfoDataFactory()
         self.system = system
+        self.idservice = IdentityService(5000)
 
-class SysinfoSnapshotWin:
+class SysinfoSnapshotWin(SysinfoSnapshot):
     def __init__(self):
         SysinfoSnapshot.__init__()
 
-class SysinfoSnapshotUnix:
+class SysinfoSnapshotUnix(SysinfoSnapshot):
     def __init__(self):
         SysinfoSnapshot.__init__()
-        self.APPOSTYPE = 'Unix'
 
         self.commandStrings = [
                                 'arp -an',
@@ -448,7 +452,6 @@ class SysinfoSnapshotUnix:
                                 #???
                                 'zcat /proc/config.gz'
                             ]
-
         self.fabdiagStrings = [
 
                                 #utility for generic fabric sweep. gets counters only during run
@@ -549,8 +552,31 @@ class SysinfoSnapshotUnix:
                                 #This file lists the execution domains currently supported by the Linux kernel,
                                 # along with the range of personalities they support.
                                 '/proc/execdomains',
+
+                                # To display the SCSI devices currently attached (and recognized) by the SCSI subsystem
+                                # use cat /proc/scsi/scsi/
                                 '/proc/scsi/scsi',
+
+                                #This file gives full information about memory usage on the slab level. Linux kernels
+                                # greater than version 2.2 use slab pools to manage memory above the page level.
+                                # Commonly used objects have their own slab pools.
+                                # Instead of parsing the highly verbose /proc/slabinfo file manually, the
+                                # /usr/bin/slabtop program displays kernel slab cache information in real time.
+                                # This program allows for custom configurations, including column sorting and screen
+                                # refreshing.
                                 '/proc/slabinfo',
+
+                                #The very first "cpu" line aggregates the numbers in all of the other "cpuN" lines.
+                                #These numbers identify the amount of time the CPU has spent performing different
+                                # kinds of work. Time units are in USER_HZ or Jiffies (typically hundredths of a second).
+                                #The meanings of the columns are as follows, from left to right:
+                                #user: normal processes executing in user mode
+                                #nice: niced processes executing in user mode
+                                #system: processes executing in kernel mode
+                                #idle: twiddling thumbs
+                                #iowait: waiting for I/O to complete
+                                #irq: servicing interrupts
+                                #softirq: servicing softirqs
                                 '/proc/stat',
                                 '/proc/swaps',
                                 '/proc/uptime',
@@ -661,68 +687,37 @@ class SysinfoSnapshotUnix:
 
 
     def getFileText(self, filename):
-        '''
-        returns a "SysInfoData" structure handled as a file type
-        '''
-        out = UnixCommand('cat {filename}'.format(fname = filename).systemCall()[0])
-        FDStruct = self.factory.generateFileDataStruct(filename, out, 'file')
+        with open(filename, 'r') as f:
+            out = f.read()
+        FDStruct = SysInfoData(filename, out, 'sysinfo-file', self.idservice.createID())
         return FDStruct
 
     def callMethod(self, methodname):
-        '''
-        returns a "SysInfoData" structure handled as a method type
-        '''
         m = getattr(self, '{meth}'.format(meth = methodname))
         out = m()
-        MStruct = self.factory.getMethodDataStruct(method, out, 'method')
+        MStruct = SysInfoData(methodname, out, 'sysinfo-method', self.idservice.createID())
         return MStruct
 
     def callCommand(self, command):
-        '''
-        returns a "SysInfoData" structure handled as a command type
-        '''
         out = UnixCommand('{cmd}'.format(cmd = command)).systemCall()[0]
-        CStruct = self.factory.generateCommandDataStruct(command, out, 'command')
+        CStruct = SysInfoData(command, out, 'sysinfo-command', self.idservice.createID())
         return CStruct
-
-    #File output types, each version of the program will have to implement it's own way of packaging output
-
 
     def gzip(self, file, newfilename):
         f = open(file,r)
         result = UnixCommand('gzip {target} {destination}'.format(target = file, destination = newfilename))
 
     def dumpHTML(self, html, newfilename):
-        f = open(newfilename+'.html', 'w')
-        f.write(html)
-        f.close()
-
-
-class SysInfoDataFactory:
-    def __init__(self):
-        pass
-
-    def generateMethodDataStruct(self, name, output, type, id, hrefname, tabletitle):
-        return MethodData(name, output, type, id, hrefname, tabletitle)
-
-    def generateFileDataStruct(self, name, output, type, id, hrefname, tabletitle):
-        return FileData(name, output, type, id, hrefname, tabletitle)
-
-    def generateCommandDataStruct(self, name, output, type, id, hrefname, tabletitle):
-        return CommandData(name, output, type, id, hrefname, tabletitle)
+        with open(newfilename+'.html', 'w') as f:
+            f.write(html)
 
 class SysInfoData:
-    def __init__(self, name, output, type, id, hrefname, tabletitle):
-
+    def __init__(self, name, output, type, id):
         self.name = name
         self.output = output
         self.type = type
         self.id = id
-
-        #html attributes used to generate the html page
-        self.hrefname = hrefname
-        self.tabletitle = tabletitle
-
+        self.section = self.name+str(self.id)
 
     def getName(self):
         return self.name
@@ -736,23 +731,10 @@ class SysInfoData:
     def getId(self):
         return self.id
 
-    def getHrefName(self):
-        return self.hrefname
+    def getSectionName(self):
+        return self.section
 
-    def getTableTitle(self):
-        return self.tabletitle
 
-class MethodData(SysInfoData):
-    def __init__(self, name, output, type, id, hrefname, tabletitle):
-        SysInfoData.__init__(self, name, output, type, id, hrefname, tabletitle)
-
-class FileData(SysInfoData):
-    def __init__(self, name, output, type, id, hrefname, tabletitle):
-        SysInfoData.__init__(self, name, output, type, id, hrefname, tabletitle)
-
-class CommandData(SysInfoData):
-    def __init__(self, name, output, type, id, hrefname, tabletitle):
-        SysInfoData.__init__(self, name, output, type, id, hrefname, tabletitle)
 
 class App:
     '''
