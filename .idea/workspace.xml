@@ -26,7 +26,7 @@
       <file leaf-file-name="sysinfo-snapshot.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sysinfo-snapshot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="52" column="38" selection-start="1185" selection-end="1185" vertical-scroll-proportion="0.4678899">
+            <state line="19" column="9" selection-start="223" selection-end="223" vertical-scroll-proportion="0.22280473">
               <folding>
                 <element signature="e#133#166#0" expanded="true" />
               </folding>
@@ -293,7 +293,11 @@
       <created>1353019558628</created>
       <updated>1353019558628</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Added discoverNetworkInterfaces and getNetworkInterfaces to the System class.  Providing a way to query for the network interfaces in a card.">
+      <created>1353020030392</created>
+      <updated>1353020030392</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -490,7 +494,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sysinfo-snapshot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="52" column="38" selection-start="1185" selection-end="1185" vertical-scroll-proportion="0.4678899">
+        <state line="19" column="9" selection-start="223" selection-end="223" vertical-scroll-proportion="0.22280473">
           <folding>
             <element signature="e#133#166#0" expanded="true" />
           </folding>

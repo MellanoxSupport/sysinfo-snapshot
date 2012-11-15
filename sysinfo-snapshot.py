@@ -18,10 +18,6 @@ import subprocess
 import shlex
 import platform
 import os
-import array
-import struct
-import socket
-import fcntl
 
 #non-standard libraries
 import netifaces
