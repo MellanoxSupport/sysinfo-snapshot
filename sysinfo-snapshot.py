@@ -768,25 +768,24 @@ class App:
 
         #Python command-line option/help generator http://docs.python.org/library/optparse.html
         self.parser = OptionParser()
+        self.__configureCLI__()
 
         #System variables obtained, depending on the host system these variables can be very different
         self.system = System()
 
         #detect the OS and initiate the correct object representing the sysinfo-snapshot program capabilities
         if self.system.operating_system in ['Windows', 'Microsoft']:
-            self.sysinfo = SysinfoSnapshotWin(self.system)
+            self.sysinfo = SysinfoSnapshotWin(self.system, self.configuration)
 
         else:
-            self.sysinfo = SysinfoSnapshotUnix(self.system)
+            self.sysinfo = SysinfoSnapshotUnix(self.system, self.configuration)
 
-        self.__configureApp__(self.sysinfo)
-        self.__configureCLI__()
 
         #Get all application configuration parameters needed to execute the app, is it running in GUI mode? CLI with options?
-        self.config = self.__getApplicationConfig__()
+
 
     def __configureCLI__(self):
         '''
         Add support and dispatch for all flags
         '''
-        pass
+        self.parser.add_option("-m", "--minimal", action="store_true", dest="minimal")
