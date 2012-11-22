@@ -26,9 +26,10 @@
       <file leaf-file-name="sysinfo-snapshot.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sysinfo-snapshot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="791" column="8" selection-start="33716" selection-end="33716" vertical-scroll-proportion="5.7494454">
+            <state line="708" column="65" selection-start="31995" selection-end="31995" vertical-scroll-proportion="12.099099">
               <folding>
                 <element signature="e#236#269#0" expanded="true" />
+                <element signature="e#8170#29923#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -64,10 +65,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1" />
-    <option name="y" value="1" />
-    <option name="width" value="1364" />
-    <option name="height" value="726" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1382" />
+    <option name="height" value="744" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -309,11 +310,15 @@
       <created>1353020293519</created>
       <updated>1353020293519</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Added discoverNetworkInterfaces and getNetworkInterfaces to the System class.  Providing a way to query for the network interfaces in a card.">
+      <created>1353456453904</created>
+      <updated>1353456453904</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1" y="1" width="1364" height="726" extended-state="0" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -321,10 +326,10 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26190478" sideWeight="0.8409894" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25833333" sideWeight="0.8458904" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1590106" sideWeight="0.99889195" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15410958" sideWeight="0.99889195" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32854578" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -398,6 +403,7 @@
         <state line="800" column="8" selection-start="33085" selection-end="33085" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#236#269#0" expanded="true" />
+            <element signature="e#8170#29923#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -414,6 +420,7 @@
         <state line="442" column="12" selection-start="17411" selection-end="17411" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#236#269#0" expanded="true" />
+            <element signature="e#8170#29923#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -430,6 +437,7 @@
         <state line="369" column="68" selection-start="14590" selection-end="14590" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#236#269#0" expanded="true" />
+            <element signature="e#8170#29923#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -446,6 +454,7 @@
         <state line="263" column="0" selection-start="8302" selection-end="8302" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#236#269#0" expanded="true" />
+            <element signature="e#8170#29923#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -467,6 +476,7 @@
         <state line="47" column="0" selection-start="897" selection-end="897" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#236#269#0" expanded="true" />
+            <element signature="e#8170#29923#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -483,6 +493,7 @@
         <state line="47" column="0" selection-start="897" selection-end="897" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#236#269#0" expanded="true" />
+            <element signature="e#8170#29923#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -506,9 +517,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sysinfo-snapshot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="791" column="8" selection-start="33716" selection-end="33716" vertical-scroll-proportion="5.7494454">
+        <state line="708" column="65" selection-start="31995" selection-end="31995" vertical-scroll-proportion="12.099099">
           <folding>
             <element signature="e#236#269#0" expanded="true" />
+            <element signature="e#8170#29923#0" expanded="false" />
           </folding>
         </state>
       </provider>

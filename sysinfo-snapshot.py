@@ -20,9 +20,18 @@ import subprocess
 import shlex
 import platform
 import os
+import getpass
+
+
 
 #non-standard libraries
-import netifaces
+try:
+    import netifaces
+except ImportError:
+    NETIFACES_NOT_FOUND = True
+
+
+
 
 class System:
     '''
@@ -40,8 +49,6 @@ class System:
         self.CPU_architecture = self.uname[4]
 
         #Constants for grabbing network interfaces...
-        self.SIOCGIFCONF = 0x8912  #define SIOCGIFCONF
-        self.BYTES = 4096          # Simply define the byte size
 
         self.network_interfaces = netifaces.interfaces()
         #OS environment variables in a dictionary
@@ -267,6 +274,11 @@ class SysinfoSnapshot:
 class SysinfoSnapshotWin(SysinfoSnapshot):
     def __init__(self):
         SysinfoSnapshot.__init__()
+
+    def amIRoot(self):
+        if getpass.getuser() == 'administrator' or 'Administrator':
+            return True
+        else: return False
 
 class SysinfoSnapshotUnix(SysinfoSnapshot):
     def __init__(self):
@@ -649,7 +661,10 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
         self.allStrings = self.commandStrings + self.methodStrings + self.fileStrings + self.fabdiagStrings
 
 
-
+    def amIRoot(self):
+        if getpass.getuser() == 'root':
+            return True
+        else: return False
     #Rogue and Orphan function implemented in order to satisfy dataset format for sysinfo
     #Also a good place for current implementations of Python libraries for those functions
 
@@ -660,7 +675,44 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
         return self.system.getRelease()
 
     def eth_tool_all_interfaces(self):
-        pass
+        def handleLinux():
+            #Try to get the interfaces using ifconfig
+            interfaces = [i for i in self.callCommand("ifconfig |grep encap|awk '{print $1'").getOutput().split('\n') if i != '']
+            for interface in interfaces:
+                regStruct = self.callCommand('ethtool {inter}'.format(inter = interface))
+                regularEthtoolList.append(regStruct)
+                driverStruct = self.callCommand('ethtool -i {inter}'.format(inter = interface))
+                driverEthtoolList.append(driverStruct)
+
+            out += "Ethtool for all interfaces\n"
+            for struct in regularEthtoolList:
+                out += struct.getOutput()+'\n'
+            out += 'Ethtool -i showing driver for all interfaces\n'
+            for struct in driverEthtoolList:
+                out += struct.getOutput()+'\n'
+        out = ''
+        regularEthtoolList = []
+        driverEthtoolList = []
+        if NETIFACES_NOT_FOUND:
+            handleLinux()
+        else:
+            handleRegular()
+            for interface in self.system.getNetworkInterfaces():
+                regStruct = self.callCommand('ethtool {inter}'.format(inter = interface))
+                regularEthtoolList.append(regStruct)
+                driverStruct = self.callCommand('ethtool -i {inter}'.format(inter = interface))
+                driverEthtoolList.append(driverStruct)
+
+            out += 'Ethtool for all interfaces\n'
+            for struct in regularEthtoolList:
+                out += struct.getOutput()+'\n'
+            out += 'Ethtool -i showing driver for all interfaces\n'
+            for struct in driverEthtoolList:
+                out += struct.getOutput()+'\n'
+        return out
+
+
+
 
     def Multicast_Information(self):
         pass
@@ -789,3 +841,12 @@ class App:
         Add support and dispatch for all flags
         '''
         self.parser.add_option("-m", "--minimal", action="store_true", dest="minimal")
+
+    def run(self):
+        pass
+
+if __name__ == '__main__':
+    if iamroot():
+        app = App()
+        app.run()
+    else: print('You must run this program as root')
