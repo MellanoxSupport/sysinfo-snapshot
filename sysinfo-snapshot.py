@@ -262,8 +262,16 @@ class SysHTMLGenerator:
                         '''
         return html
 
-    def generateOutputSection(self):
-        pass
+    def generateOutputSections(self, sysinfodatums):
+        html = ''
+        for datum in sysinfodatums:
+            html += self.generateOutputSection(datum)
+        return html
+
+    def generateOutputSection(self, sysinfodatum):
+        html = '<h2>{body}</h2>'.format(body = sysinfodatum.getOutput())
+        html += '<a name = "{sectionname}"></a>'.format(sectionname = sysinfodatum.getSectionName())
+        return html
 
 class SysinfoSnapshot:
     def __init__(self, system = None):
@@ -675,7 +683,11 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
         return self.system.getRelease()
 
     def eth_tool_all_interfaces(self):
-        def handleLinux():
+        out = ''
+        regularEthtoolList = []
+        driverEthtoolList = []
+        #
+        def handleLinux(out):
             #Try to get the interfaces using ifconfig
             interfaces = [i for i in self.callCommand("ifconfig |grep encap|awk '{print $1'").getOutput().split('\n') if i != '']
             for interface in interfaces:
@@ -690,13 +702,14 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
             out += 'Ethtool -i showing driver for all interfaces\n'
             for struct in driverEthtoolList:
                 out += struct.getOutput()+'\n'
-        out = ''
-        regularEthtoolList = []
-        driverEthtoolList = []
+                return out
+
+
+
         if NETIFACES_NOT_FOUND:
-            handleLinux()
+            out += handleLinux(out)
+
         else:
-            handleRegular()
             for interface in self.system.getNetworkInterfaces():
                 regStruct = self.callCommand('ethtool {inter}'.format(inter = interface))
                 regularEthtoolList.append(regStruct)
