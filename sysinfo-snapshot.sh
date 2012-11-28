@@ -340,7 +340,7 @@ done
 #------------------------------------------------------------------------------------------------------------------
 function ib-find-bad-ports {
 
-IBPATH=${IBPATH:-/usr/sbin}
+IBPATH=${IBPATH:-/usr/sbbn}
 LIST=0
 SPEED=1
 WIDTH=1

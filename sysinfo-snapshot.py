@@ -24,14 +24,6 @@ import getpass
 
 
 
-#non-standard libraries
-try:
-    import netifaces
-except ImportError:
-    NETIFACES_NOT_FOUND = True
-
-
-
 
 class System:
     '''
@@ -40,7 +32,6 @@ class System:
     '''
 
     def __init__(self):
-        #Any of these values upon retrieval failure will be NULL
         self.uname = platform.uname()
         self.system = self.uname[0]
         self.hostname = self.uname[1]
@@ -48,14 +39,8 @@ class System:
         self.release = self.uname[3]
         self.CPU_architecture = self.uname[4]
 
-        #Constants for grabbing network interfaces...
-
-        self.network_interfaces = netifaces.interfaces()
         #OS environment variables in a dictionary
         self.env = os.environ
-
-    def getNetworkInterfaces(self):
-        return self.network_interfaces
 
     def getSystem(self):
         return self.system
@@ -687,57 +672,43 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
         regularEthtoolList = []
         driverEthtoolList = []
         #
-        def handleLinux(out):
             #Try to get the interfaces using ifconfig
-            interfaces = [i for i in self.callCommand("ifconfig |grep encap|awk '{print $1'").getOutput().split('\n') if i != '']
-            for interface in interfaces:
-                regStruct = self.callCommand('ethtool {inter}'.format(inter = interface))
-                regularEthtoolList.append(regStruct)
-                driverStruct = self.callCommand('ethtool -i {inter}'.format(inter = interface))
-                driverEthtoolList.append(driverStruct)
+        interfaces = [i for i in self.callCommand("ifconfig |grep encap|awk '{print $1'").getOutput().split('\n') if i != '']
+        for interface in interfaces:
+            regStruct = self.callCommand('ethtool {inter}'.format(inter = interface))
+            regularEthtoolList.append(regStruct)
+            driverStruct = self.callCommand('ethtool -i {inter}'.format(inter = interface))
+            driverEthtoolList.append(driverStruct)
 
-            out += "Ethtool for all interfaces\n"
-            for struct in regularEthtoolList:
-                out += struct.getOutput()+'\n'
-            out += 'Ethtool -i showing driver for all interfaces\n'
-            for struct in driverEthtoolList:
-                out += struct.getOutput()+'\n'
-                return out
-
-
-
-        if NETIFACES_NOT_FOUND:
-            out += handleLinux(out)
-
-        else:
-            for interface in self.system.getNetworkInterfaces():
-                regStruct = self.callCommand('ethtool {inter}'.format(inter = interface))
-                regularEthtoolList.append(regStruct)
-                driverStruct = self.callCommand('ethtool -i {inter}'.format(inter = interface))
-                driverEthtoolList.append(driverStruct)
-
-            out += 'Ethtool for all interfaces\n'
-            for struct in regularEthtoolList:
-                out += struct.getOutput()+'\n'
-            out += 'Ethtool -i showing driver for all interfaces\n'
-            for struct in driverEthtoolList:
-                out += struct.getOutput()+'\n'
+        out += "Ethtool for all interfaces\n"
+        for struct in regularEthtoolList:
+            out += struct.getOutput()+'\n'
+        out += 'Ethtool -i showing driver for all interfaces\n'
+        for struct in driverEthtoolList:
+            out += struct.getOutput()+'\n'
         return out
 
 
 
-
     def Multicast_Information(self):
-        pass
+        out = ''
+        out += "MLIDs list: \n"
+        out += self.callCommand('/usr/sbin/saquery -g').getOutput()+'\n'
+        out += "MLIDs members for each multicast group:" +'\n'
+        MLIDS = self.callCommand("/usr/sbin/saquery -g |grep Mlid | sed 's/\./ /g'|awk '{print $2}'").getOutput() +'\n'
+
+        for lid in MLIDS:
+            out += "Members of MLID {gname} group".format(gname = lid) +'\n'
+            out += self.callCommand("saquery -m {Lid}".format(Lid = lid)).getOutput() +'\n'
+            out += "============================================================"
+        return out
 
     def zz_proc_net_bonding_files(self):
-        pass
+        return self.callCommand("find /proc/net/bonding/ |xargs grep ^").getOutput()
 
     def zz_sys_class_net_files(self):
-        pass
+        return self.callCommand("find /sys/class/net/ |xargs grep ^").getOutput()
 
-    def ib_find_bad_ports(self):
-        pass
 
     def ib_mc_info_show(self):
         pass
