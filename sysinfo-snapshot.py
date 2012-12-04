@@ -124,10 +124,7 @@ class IdentityService:
         return None
 
 class SysHTMLGenerator:
-    def __init__(self, hostname, iterablecontent, sysinfoinstance):
-        self.sysinfo = sysinfoinstance
-        self.hostname = hostname
-        self.iterablecontent = iterablecontent
+    def __init__(self):
 
     def constructPage(self):
         page = '''
@@ -147,7 +144,7 @@ class SysHTMLGenerator:
                         {ServerFilesTable}
 
                         <h2>Server Commands:</h2>
-                        {CommandsOutput}
+                        {MethodsOutput}
                         <h2>Network Information:</h2>
                         {FabricDiagnosticsOutput}
                         <h2>Files Information:</h2>
@@ -160,27 +157,15 @@ class SysHTMLGenerator:
             title = self.generateTitle(self.hostname),
             index = self.generateIndex(),
 
-            ServerCommandTable = self.generateTableSections(self.sysinfo.server_commands),
-            NetworkCommandTable = self.generateTableSections(self.sysinfo.fabric_diagnostics),
-            ServerFilesTable = self.generateTableSections(self.sysinfo.files),
-            CommandsOutput = self.generateOutputSections(self.sysinfo.server_commands),
+            ServerCommandTable = self.generateTableSections(self.sysinfo.snapshotcmdstructs + self.sysinfo.snapshotmethstructs),
+            NetworkCommandTable = self.generateTableSections(self.sysinfo.snapshotfabstructs),
+            ServerFilesTable = self.generateTableSections(self.sysinfo.snapshotfilestructs),
 
-            FabricDiagnosticsOutput = self.generateOutputSections(self.sysinfo.fabric_diagnostics),
-            FilesOutput = self.generateOutputSections(self.sysinfo.files),
+            MethodsOutput = self.generateOutputSections(self.sysinfo.snapshotmethstructs + self.sysinfo.snapshotcmdstructs),
+            FabricDiagnosticsOutput = self.generateOutputSections(self.sysinfo.snapshotfabstructs),
+            FilesOutput = self.generateOutputSections(self.sysinfo.snapshotfilestructs),
         )
         return page
-
-    def generateSectionFooter(self, previous, originsection, next):
-        foot = '''
-                <small><a href=\"#{previoussection}\">[&lt;&lt;prev]</a></small>
-                <small><a href=\"#{index}\">[back to index]</a></small>
-                <small><a href=\"#{nextsection}">[next>>]</a></small>
-               '''.format(
-            previoussection = previous,
-            index = originsection,
-            nextsection = next,
-        )
-        return foot
 
     def generateTitle(self, hostname):
         return "<title>{hostn}'s Diagnostics</title>".format(hostn = hostname)
@@ -259,14 +244,15 @@ class SysHTMLGenerator:
         return html
 
 class SysinfoSnapshot:
-    def __init__(self, system = None):
+    def __init__(self, system, config):
         self.factory = SysInfoDataFactory()
         self.system = system
         self.idservice = IdentityService(5000)
+        self.appconfig = config
 
 class SysinfoSnapshotWin(SysinfoSnapshot):
-    def __init__(self , system = None):
-        SysinfoSnapshot.__init__(system)
+    def __init__(self , system, config):
+        SysinfoSnapshot.__init__(system, config)
 
     def amIRoot(self):
         if getpass.getuser() == 'administrator' or 'Administrator':
@@ -274,10 +260,14 @@ class SysinfoSnapshotWin(SysinfoSnapshot):
         else: return False
 
 class SysinfoSnapshotUnix(SysinfoSnapshot):
-    def __init__(self , system = None):
-        SysinfoSnapshot.__init__(system)
+    def __init__(self , system, config):
+        SysinfoSnapshot.__init__(system, config)
+        self.htmlgen = SysHTMLGenerator()
 
-        self.snapshotstructs = []
+        self.snapshotcmdstructs = []
+        self.snapshotfilestructs = []
+        self.snapshotfabstructs = []
+        self.snapshotmethstructs = []
 
         self.commandStrings = [
                                 'arp -an',
@@ -688,31 +678,28 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
     def zz_sys_class_net_files(self):
         return self.callCommand("find /sys/class/net/ |xargs grep ^").getOutput()
 
-    def runDiscovery(self, config):
-        structs = []
-        opts = config[0]
-        args = config[1]
+    def runDiscovery(self):
 
-        if args.minimal:
+        if self.appconfig[0].minimal:
             pass
 
         else:
             for i in self.commandStrings:
                 struct = self.callCommand(i)
-                self.snapshotstructs.append(struct)
+                self.snapshotcmdstructs.append(struct)
 
             for i in self.methodStrings:
                 struct = self.callMethod(i)
-                self.snapshotstructs.append(struct)
+                self.snapshotmethstructs.append(struct)
 
 
             for i in self.fileStrings:
                 struct = self.getFileText(i)
-                self.snapshotstructs.append(struct)
+                self.snapshotfilestructs.append(struct)
 
             for i in self.fabdiagStrings:
                 struct = self.callCommand(i)
-                self.snapshotstructs.append(struct)
+                self.snapshotfabstructs.append(struct)
 
 
 
@@ -741,6 +728,9 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
     def dumpHTML(self, html, newfilename):
         with open(newfilename+'.html', 'w') as f:
             f.write(html)
+
+    def getHTMLInterface(self):
+        return self.htmlgen.constructPage()
 
 class SysInfoData:
     def __init__(self, name, output, type, id):
@@ -793,10 +783,10 @@ class App:
 
         #detect the OS and initiate the correct object representing the sysinfo-snapshot program capabilities
         if self.system.operating_system in ['Windows', 'Microsoft']:
-            self.sysinfo = SysinfoSnapshotWin(self.system)
+            self.sysinfo = SysinfoSnapshotWin(self.system, self.configuration)
 
         else:
-            self.sysinfo = SysinfoSnapshotUnix(self.system)
+            self.sysinfo = SysinfoSnapshotUnix(self.system, self.configuration)
 
 
         #Get all application configuration parameters needed to execute the app, is it running in GUI mode? CLI with options?
@@ -815,4 +805,6 @@ class App:
             raise ValueError
 
         #Run all commands in accordance to flags passed from CLI
-        self.sysinfo.runDiscovery(self.configuration)
+        self.sysinfo.runDiscovery()
+        interface = self.sysinfo.getHTMLInterface()
+        self.sysinfo.dumpHTML(interface, '{hostname}Snapshot')

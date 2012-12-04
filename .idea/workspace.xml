@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="39f4415b-4399-4ae4-9d89-c7c17f3d5a73" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sysinfo-snapshot.py" afterPath="$PROJECT_DIR$/sysinfo-snapshot.py" />
     </list>
     <ignored path="sysinfo-snapshot-pub.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,9 +26,14 @@
       <file leaf-file-name="sysinfo-snapshot.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sysinfo-snapshot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="710" column="0" selection-start="32191" selection-end="32191" vertical-scroll-proportion="0.8">
+            <state line="262" column="38" selection-start="7724" selection-end="7724" vertical-scroll-proportion="0.62765956">
               <folding>
                 <element signature="e#236#269#0" expanded="true" />
+                <element signature="e#1165#1437#0" expanded="false" />
+                <element signature="e#1471#2057#0" expanded="false" />
+                <element signature="e#2094#2427#0" expanded="false" />
+                <element signature="e#2456#2850#0" expanded="false" />
+                <element signature="e#28984#29066#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -36,7 +42,7 @@
       <file leaf-file-name="sysinfo-snapshot.sh" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sysinfo-snapshot.sh">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="455" column="14" selection-start="9844" selection-end="9849" vertical-scroll-proportion="7.559322">
+            <state line="455" column="14" selection-start="9844" selection-end="9849" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -57,15 +63,15 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/Datasets" />
-        <option value="$PROJECT_DIR$/sysinfo-snapshot.py" />
         <option value="$PROJECT_DIR$/sysinfo-snapshot.sh" />
+        <option value="$PROJECT_DIR$/sysinfo-snapshot.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="65" />
-    <option name="y" value="24" />
-    <option name="width" value="1855" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1936" />
     <option name="height" value="1056" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
@@ -94,7 +100,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -105,16 +110,17 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="options.lastSelected" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="recentsLimit" value="5" />
+    <property name="options.lastSelected" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
-    <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -320,22 +326,26 @@
       <created>1354067487779</created>
       <updated>1354067487779</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Fixing CLI interface">
+      <created>1354653396740</created>
+      <updated>1354653396740</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32924107" sideWeight="0.49786553" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26149586" sideWeight="0.8465665" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26467448" sideWeight="0.6707589" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15343347" sideWeight="0.99889195" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32924107" sideWeight="0.49839914" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32854578" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -382,7 +392,7 @@
     <option name="SHOW_VCS_ERROR_NOTIFICATIONS" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added discoverNetworkInterfaces and getNetworkInterfaces to the System class.  Providing a way to query for the network interfaces in a card." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixing CLI interface" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -399,6 +409,7 @@
     <MESSAGE value="test changes" />
     <MESSAGE value="added more notes on dataset definitions" />
     <MESSAGE value="Added discoverNetworkInterfaces and getNetworkInterfaces to the System class.  Providing a way to query for the network interfaces in a card." />
+    <MESSAGE value="Fixing CLI interface" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -409,6 +420,11 @@
         <state line="800" column="8" selection-start="33085" selection-end="33085" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#236#269#0" expanded="true" />
+            <element signature="e#1165#1437#0" expanded="false" />
+            <element signature="e#1471#2057#0" expanded="false" />
+            <element signature="e#2094#2427#0" expanded="false" />
+            <element signature="e#2456#2850#0" expanded="false" />
+            <element signature="e#28984#29066#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -425,6 +441,11 @@
         <state line="442" column="12" selection-start="17411" selection-end="17411" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#236#269#0" expanded="true" />
+            <element signature="e#1165#1437#0" expanded="false" />
+            <element signature="e#1471#2057#0" expanded="false" />
+            <element signature="e#2094#2427#0" expanded="false" />
+            <element signature="e#2456#2850#0" expanded="false" />
+            <element signature="e#28984#29066#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -441,6 +462,11 @@
         <state line="369" column="68" selection-start="14590" selection-end="14590" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#236#269#0" expanded="true" />
+            <element signature="e#1165#1437#0" expanded="false" />
+            <element signature="e#1471#2057#0" expanded="false" />
+            <element signature="e#2094#2427#0" expanded="false" />
+            <element signature="e#2456#2850#0" expanded="false" />
+            <element signature="e#28984#29066#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -457,6 +483,11 @@
         <state line="263" column="0" selection-start="8302" selection-end="8302" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#236#269#0" expanded="true" />
+            <element signature="e#1165#1437#0" expanded="false" />
+            <element signature="e#1471#2057#0" expanded="false" />
+            <element signature="e#2094#2427#0" expanded="false" />
+            <element signature="e#2456#2850#0" expanded="false" />
+            <element signature="e#28984#29066#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -478,6 +509,11 @@
         <state line="47" column="0" selection-start="897" selection-end="897" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#236#269#0" expanded="true" />
+            <element signature="e#1165#1437#0" expanded="false" />
+            <element signature="e#1471#2057#0" expanded="false" />
+            <element signature="e#2094#2427#0" expanded="false" />
+            <element signature="e#2456#2850#0" expanded="false" />
+            <element signature="e#28984#29066#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -494,6 +530,11 @@
         <state line="47" column="0" selection-start="897" selection-end="897" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#236#269#0" expanded="true" />
+            <element signature="e#1165#1437#0" expanded="false" />
+            <element signature="e#1471#2057#0" expanded="false" />
+            <element signature="e#2094#2427#0" expanded="false" />
+            <element signature="e#2456#2850#0" expanded="false" />
+            <element signature="e#28984#29066#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -510,16 +551,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sysinfo-snapshot.sh">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="455" column="14" selection-start="9844" selection-end="9849" vertical-scroll-proportion="7.559322">
+        <state line="455" column="14" selection-start="9844" selection-end="9849" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sysinfo-snapshot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="710" column="0" selection-start="32191" selection-end="32191" vertical-scroll-proportion="0.8">
+        <state line="262" column="38" selection-start="7724" selection-end="7724" vertical-scroll-proportion="0.62765956">
           <folding>
             <element signature="e#236#269#0" expanded="true" />
+            <element signature="e#1165#1437#0" expanded="false" />
+            <element signature="e#1471#2057#0" expanded="false" />
+            <element signature="e#2094#2427#0" expanded="false" />
+            <element signature="e#2456#2850#0" expanded="false" />
+            <element signature="e#28984#29066#0" expanded="false" />
           </folding>
         </state>
       </provider>
