@@ -16,7 +16,7 @@ Dependencies:
 @author: luis
 '''
 from optparse import OptionParser
-import subprocess
+#import subprocess
 import shlex
 import platform
 import os
@@ -83,7 +83,7 @@ class UnixCommand(Command):
         returns both the output and the error in a tuple
         This is intentionally a blocking command, it will not return until the command has ended.
         '''
-        proccess = subprocess.Popen(shlex.split(cmd))
+        proccess = os.popen(shlex.split(cmd))
         proccess.wait()
         out, err = process.communicate()
         self.lastout = out
@@ -125,6 +125,8 @@ class IdentityService:
 
 class SysHTMLGenerator:
     def __init__(self):
+        pass
+
 
     def constructPage(self):
         page = '''
@@ -245,14 +247,13 @@ class SysHTMLGenerator:
 
 class SysinfoSnapshot:
     def __init__(self, system, config):
-        self.factory = SysInfoDataFactory()
         self.system = system
         self.idservice = IdentityService(5000)
         self.appconfig = config
 
 class SysinfoSnapshotWin(SysinfoSnapshot):
     def __init__(self , system, config):
-        SysinfoSnapshot.__init__(system, config)
+        SysinfoSnapshot.__init__(self, system, config)
 
     def amIRoot(self):
         if getpass.getuser() == 'administrator' or 'Administrator':
@@ -261,7 +262,7 @@ class SysinfoSnapshotWin(SysinfoSnapshot):
 
 class SysinfoSnapshotUnix(SysinfoSnapshot):
     def __init__(self , system, config):
-        SysinfoSnapshot.__init__(system, config)
+        SysinfoSnapshot.__init__(self, system, config)
         self.htmlgen = SysHTMLGenerator()
 
         self.snapshotcmdstructs = []
@@ -705,8 +706,9 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
 
 
     def getFileText(self, filename):
-        with open(filename, 'r') as f:
-            out = f.read()
+        f = open(filename, 'r')
+        out = f.read()
+        f.close()
         FDStruct = SysInfoData(filename, out, 'sysinfo-file', self.idservice.createID())
         return FDStruct
 
@@ -725,9 +727,10 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
         f = open(file,r)
         result = UnixCommand('gzip {target} {destination}'.format(target = file, destination = newfilename))
 
-    def dumpHTML(self, html, newfilename):
-        with open(newfilename+'.html', 'w') as f:
-            f.write(html)
+    def dumpHTML(self, html, filename):
+        f = open('{fn}.html'.format(fn = filename), 'w')
+        f.write(html)
+        f.close()
 
     def getHTMLInterface(self):
         return self.htmlgen.constructPage()
@@ -782,7 +785,7 @@ class App:
         self.system = System()
 
         #detect the OS and initiate the correct object representing the sysinfo-snapshot program capabilities
-        if self.system.operating_system in ['Windows', 'Microsoft']:
+        if self.system.getSystem() in ['Windows', 'Microsoft']:
             self.sysinfo = SysinfoSnapshotWin(self.system, self.configuration)
 
         else:
@@ -805,6 +808,10 @@ class App:
             raise ValueError
 
         #Run all commands in accordance to flags passed from CLI
+        print('Please wait, collecting...')
         self.sysinfo.runDiscovery()
         interface = self.sysinfo.getHTMLInterface()
         self.sysinfo.dumpHTML(interface, '{hostname}Snapshot')
+
+a = App()
+a.run()
