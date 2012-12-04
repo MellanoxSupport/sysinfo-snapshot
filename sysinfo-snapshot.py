@@ -16,7 +16,7 @@ Dependencies:
 @author: luis
 '''
 from optparse import OptionParser
-#import subprocess
+import subprocess
 import shlex
 import platform
 import os
@@ -63,8 +63,6 @@ class Command:
     def __init__(self, cmd, name, TIMEOUT = 100):
         self.cmd = cmd
         self.name = name
-        self.TIMEOUT = TIMEOUT
-        self.lastout = ''
 
     def systemCall(self):
         '''
@@ -72,9 +70,18 @@ class Command:
         '''
         pass
 
+class fauxProcess:
+    def __init__(self):
+        pass
+
+    def communicate(self):
+        out = 'Process error, could not find program installed'
+        err = 'Process error'
+        return out, err
+
 class UnixCommand(Command):
     def __init__(self, cmd, name):
-        Command.__init__(cmd, name)
+        Command.__init__(self, cmd, name)
 
     def systemCall(self):
         '''
@@ -83,11 +90,13 @@ class UnixCommand(Command):
         returns both the output and the error in a tuple
         This is intentionally a blocking command, it will not return until the command has ended.
         '''
-        proccess = os.popen(shlex.split(cmd))
-        proccess.wait()
+        try:
+            process = subprocess.Popen(shlex.split(self.cmd), stderr = subprocess.STDOUT, stdout = subprocess.PIPE)
+        #process.wait()
+        except:
+            process = fauxProcess()
         out, err = process.communicate()
-        self.lastout = out
-        return out, err
+        return out
 
 class WindowsCommand(Command):
     def __init__(self, cmd, name):
@@ -124,8 +133,9 @@ class IdentityService:
         return None
 
 class SysHTMLGenerator:
-    def __init__(self):
-        pass
+    def __init__(self, system, sysinfo):
+        self.hostname = system.getHostname()
+        self.sysinfo = sysinfo
 
 
     def constructPage(self):
@@ -138,18 +148,18 @@ class SysHTMLGenerator:
                     <body>
                         <pre>
                         {index}
-                        <h2>Server Commands:</h2>
+                        <h1>Server Commands:</h1>
                         {ServerCommandTable}
-                        <h2>Network Information:</h2>
+                        <h1>Network Information:</h1>
                         {NetworkCommandTable}
-                        <h2>Files Information:</h2>
+                        <h1>Files Information:</h1>
                         {ServerFilesTable}
 
-                        <h2>Server Commands:</h2>
+                        <h1>Server Commands:</h1>
                         {MethodsOutput}
-                        <h2>Network Information:</h2>
+                        <h1>Network Information:</h1>
                         {FabricDiagnosticsOutput}
-                        <h2>Files Information:</h2>
+                        <h1>Files Information:</h1>
                         {FilesOutput}
 
                         </pre>
@@ -179,13 +189,13 @@ class SysHTMLGenerator:
                     Mellanox Technologies
                     </h1>
                 <a name="index"></a>
-                    <h2>
+                    <h1>
                     System Information Snapshot Utility
-                    </h2>
+                    </h1>
                 <a name="index"></a>
-                    <h2>
+                    <h1>
                     Version: 0.1
-                    </h2>
+                    </h1>
                 <hr>
               '''
         return out
@@ -198,11 +208,10 @@ class SysHTMLGenerator:
         #Grab the amount of data structures in the list
         struct_count = len(sysinfo_data_structure_list)
 
-        #set a delimiter to use for html <tr></tr> breaks
-        section_split_delimiter = struct_count/4
 
         #initiate a count to keep track of when to break
         c = 0
+        limit = 3
 
         #start writing the tabled section...
         html = ''
@@ -218,20 +227,23 @@ class SysHTMLGenerator:
             )
 
         #elements here are unpackaged sysinfostructs
+
         for element in sysinfo_data_structure_list:
             html += '''
                 <td width = 25%>
-                    <a href=#\"{secname}\">{elementname}</a>
+                    <a href="{secname}">{elementname}</a>
                 </td>
                     '''.format(
                 secname = element.getSectionName(),
                 elementname = element.getName(),
             )
-            if c > 4:
+            c += 1
+            if c > limit:
                 html += '''
                 </tr>
                 <tr>
                         '''
+                limit += 3
         return html
 
     def generateOutputSections(self, sysinfodatums):
@@ -241,7 +253,7 @@ class SysHTMLGenerator:
         return html
 
     def generateOutputSection(self, sysinfodatum):
-        html = '<h2>{body}</h2>'.format(body = sysinfodatum.getOutput())
+        html = '<h1>{body}</h1>'.format(body = sysinfodatum.getOutput())
         html += '<a name = "{sectionname}"></a>'.format(sectionname = sysinfodatum.getSectionName())
         return html
 
@@ -263,7 +275,7 @@ class SysinfoSnapshotWin(SysinfoSnapshot):
 class SysinfoSnapshotUnix(SysinfoSnapshot):
     def __init__(self , system, config):
         SysinfoSnapshot.__init__(self, system, config)
-        self.htmlgen = SysHTMLGenerator()
+
 
         self.snapshotcmdstructs = []
         self.snapshotfilestructs = []
@@ -300,7 +312,7 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
                                 'df -h',
 
                                 #give us a snapshot of the current kernel output log, why this and /var/log/messages?
-                                'dmesg',
+                                #'dmesg',
 
                                 #Older version of biosdecode for older systems
                                 'dmidecode',
@@ -615,7 +627,7 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
                                 'zz_proc_net_bonding_files',
 
                                 #Use the Python Platform library to retrieve OS hostname
-                                'getHostname'
+                                'getHostname',
 
                                 #Use the Python Platform library to retrieve OS release data in a cross platform manner
                                 'getRelease',
@@ -682,22 +694,24 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
     def runDiscovery(self):
 
         if self.appconfig[0].minimal:
+            print('hit appconfig minimal, exiting')
             pass
 
         else:
+            print('starting cmd dump')
             for i in self.commandStrings:
                 struct = self.callCommand(i)
                 self.snapshotcmdstructs.append(struct)
-
+            print('starting method dump')
             for i in self.methodStrings:
                 struct = self.callMethod(i)
                 self.snapshotmethstructs.append(struct)
 
-
+            print('starting files dump')
             for i in self.fileStrings:
                 struct = self.getFileText(i)
                 self.snapshotfilestructs.append(struct)
-
+            print('starting fabdiag dump')
             for i in self.fabdiagStrings:
                 struct = self.callCommand(i)
                 self.snapshotfabstructs.append(struct)
@@ -706,7 +720,10 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
 
 
     def getFileText(self, filename):
-        f = open(filename, 'r')
+        try:
+            f = open(filename, 'r')
+        except:
+            return SysInfoData(filename, 'FILENOTFOUND', 'sysinfo-file', self.idservice.createID())
         out = f.read()
         f.close()
         FDStruct = SysInfoData(filename, out, 'sysinfo-file', self.idservice.createID())
@@ -719,8 +736,9 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
         return MStruct
 
     def callCommand(self, command):
-        out = UnixCommand('{cmd}'.format(cmd = command)).systemCall()[0]
+        out = UnixCommand('{cmd}'.format(cmd = command), command).systemCall()
         CStruct = SysInfoData(command, out, 'sysinfo-command', self.idservice.createID())
+        print CStruct
         return CStruct
 
     def gzip(self, file, newfilename):
@@ -741,7 +759,7 @@ class SysInfoData:
         self.output = output
         self.type = type
         self.id = id
-        self.section = self.name+str(self.id)
+        self.section = self.name
 
     def getName(self):
         return self.name
@@ -784,6 +802,7 @@ class App:
         #System variables obtained, depending on the host system these variables can be very different
         self.system = System()
 
+
         #detect the OS and initiate the correct object representing the sysinfo-snapshot program capabilities
         if self.system.getSystem() in ['Windows', 'Microsoft']:
             self.sysinfo = SysinfoSnapshotWin(self.system, self.configuration)
@@ -791,8 +810,8 @@ class App:
         else:
             self.sysinfo = SysinfoSnapshotUnix(self.system, self.configuration)
 
-
-        #Get all application configuration parameters needed to execute the app, is it running in GUI mode? CLI with options?
+        #Initiate interface generator
+        self.htmlgen = SysHTMLGenerator(self.system, self.sysinfo)
 
 
     def __configureCLI__(self):
@@ -801,17 +820,25 @@ class App:
         '''
         self.parser.add_option("-m", "--minimal", action="store_true", dest="minimal")
 
+
+
+        (opts, args) = self.parser.parse_args()
+        configuration = [opts, args]
+        return configuration
+
     def run(self):
-        if not self.sysinfo.amIRoot():
-            print('You must run this program as root')
-            print('exiting...')
-            raise ValueError
+        #if not self.sysinfo.amIRoot():
+        #    print('You must run this program as root')
+        #    print('exiting...')
+        #    raise ValueError
 
         #Run all commands in accordance to flags passed from CLI
         print('Please wait, collecting...')
         self.sysinfo.runDiscovery()
-        interface = self.sysinfo.getHTMLInterface()
-        self.sysinfo.dumpHTML(interface, '{hostname}Snapshot')
+        print('Discovery complete... generating interface')
+        interface = self.htmlgen.constructPage()
+        print('Dumping Interface at {location}'.format(location = os.getcwd()))
+        self.sysinfo.dumpHTML(interface, '{hostname}Snapshot'.format(hostname = self.system.getHostname()))
 
 a = App()
 a.run()
