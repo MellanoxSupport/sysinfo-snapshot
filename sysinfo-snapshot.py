@@ -265,8 +265,8 @@ class SysinfoSnapshot:
         self.idservice = IdentityService(5000)
 
 class SysinfoSnapshotWin(SysinfoSnapshot):
-    def __init__(self):
-        SysinfoSnapshot.__init__()
+    def __init__(self , system = None):
+        SysinfoSnapshot.__init__(system)
 
     def amIRoot(self):
         if getpass.getuser() == 'administrator' or 'Administrator':
@@ -274,8 +274,10 @@ class SysinfoSnapshotWin(SysinfoSnapshot):
         else: return False
 
 class SysinfoSnapshotUnix(SysinfoSnapshot):
-    def __init__(self):
-        SysinfoSnapshot.__init__()
+    def __init__(self , system = None):
+        SysinfoSnapshot.__init__(system)
+
+        self.snapshotstructs = []
 
         self.commandStrings = [
                                 'arp -an',
@@ -615,24 +617,7 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
         #Methods listed here must exist in this class
         self.methodStrings = [
 
-                                #check whether sm is alive and what it is
-                                'sm-status',
-
-                                #check who the sm master is as opposed to any slave sm
-                                'sm_master_is',
-
-                                #scan the firmware for all inband infiniband switches
-                                'ib_switches_FW_scan',
-
                                 'Multicast_Information',
-
-                                'ib_find_bad_ports',
-
-                                'ib_find_disabled_ports',
-
-                                'ib_mc_info_show',
-
-                                'ib_topology_viewer',
 
                                 'zz_sys_class_net_files',
 
@@ -647,8 +632,6 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
                                 #Get the output of ethtool <Interface> on every system interface
                                 'eth_tool_all_interfaces',
 
-                                #Pull the ini from each interface on the system
-                                'fw_ini_dump',
                               ]
 
         self.allStrings = self.commandStrings + self.methodStrings + self.fileStrings + self.fabdiagStrings
@@ -658,8 +641,6 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
         if getpass.getuser() == 'root':
             return True
         else: return False
-    #Rogue and Orphan function implemented in order to satisfy dataset format for sysinfo
-    #Also a good place for current implementations of Python libraries for those functions
 
     def getHostname(self):
         return self.system.getHostname()
@@ -688,8 +669,6 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
             out += struct.getOutput()+'\n'
         return out
 
-
-
     def Multicast_Information(self):
         out = ''
         out += "MLIDs list: \n"
@@ -709,30 +688,33 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
     def zz_sys_class_net_files(self):
         return self.callCommand("find /sys/class/net/ |xargs grep ^").getOutput()
 
+    def runDiscovery(self, config):
+        structs = []
+        opts = config[0]
+        args = config[1]
 
-    def ib_mc_info_show(self):
-        pass
+        if args.minimal:
+            pass
 
-    def ib_switches_FW_scan(self):
-        pass
+        else:
+            for i in self.commandStrings:
+                struct = self.callCommand(i)
+                self.snapshotstructs.append(struct)
 
-    def sm_master_is(self):
-        pass
+            for i in self.methodStrings:
+                struct = self.callMethod(i)
+                self.snapshotstructs.append(struct)
 
-    def fw_ini_dump(self):
-        pass
 
-    def ib_topology_viewer(self):
-        pass
+            for i in self.fileStrings:
+                struct = self.getFileText(i)
+                self.snapshotstructs.append(struct)
 
-    def ib_mc_info_show(self):
-        pass
+            for i in self.fabdiagStrings:
+                struct = self.callCommand(i)
+                self.snapshotstructs.append(struct)
 
-    def sm_status(self):
-        pass
 
-    def runDiscovery(self):
-        pass
 
 
     def getFileText(self, filename):
@@ -804,17 +786,17 @@ class App:
 
         #Python command-line option/help generator http://docs.python.org/library/optparse.html
         self.parser = OptionParser()
-        self.__configureCLI__()
+        self.configuration = self.__configureCLI__()
 
         #System variables obtained, depending on the host system these variables can be very different
         self.system = System()
 
         #detect the OS and initiate the correct object representing the sysinfo-snapshot program capabilities
         if self.system.operating_system in ['Windows', 'Microsoft']:
-            self.sysinfo = SysinfoSnapshotWin(self.system, self.configuration)
+            self.sysinfo = SysinfoSnapshotWin(self.system)
 
         else:
-            self.sysinfo = SysinfoSnapshotUnix(self.system, self.configuration)
+            self.sysinfo = SysinfoSnapshotUnix(self.system)
 
 
         #Get all application configuration parameters needed to execute the app, is it running in GUI mode? CLI with options?
@@ -827,10 +809,10 @@ class App:
         self.parser.add_option("-m", "--minimal", action="store_true", dest="minimal")
 
     def run(self):
-        pass
+        if not self.sysinfo.amIRoot():
+            print('You must run this program as root')
+            print('exiting...')
+            raise ValueError
 
-if __name__ == '__main__':
-    if iamroot():
-        app = App()
-        app.run()
-    else: print('You must run this program as root')
+        #Run all commands in accordance to flags passed from CLI
+        self.sysinfo.runDiscovery(self.configuration)
