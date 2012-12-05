@@ -111,26 +111,63 @@ class WindowsCommand(Command):
         #reserving for windows implementation
         pass
 
-class IdentityService:
-    def __init__(self, poolrange):
-        self.pool = range(poolrange)
-        self.used = []
+class AdvancedSysHTMLGenerator:
+    def __init__(self, system, sysinfo):
+        self.sysinfo = sysinfo
 
-    def createID(self):
-        id = self.pool[0]
-        self.pool.pop(id)
-        self.used.append(id)
-        return id
+    def genSISCSS(self):
+        css = '''
+div.menuClass{}
+div.hrefClass{}
+div.OutputBoxClass{}
+div.OutputSectionClass{}
+'''
 
-    def deleteID(self, id):
-        self.used.pop(id)
 
-    def getID(self, id):
-        for i in self.used:
-            if i == id:
-                return id
+    def genSISMenu(self, SISdatums, menuID):
+        html = '''
+<div class = menuClass id = {divid}>
+                '''.format(
+            divid = menuID,
+            content = c,
+        )
+        for d in SISdatums:
+            html += self.genSISMenuElement(d)
+        html += '</div>'
+        return html
 
-        return None
+
+
+    def genSISMenuElement(self, SISdatum):
+        html = '''
+<div class = hrefClass id = {divid}>
+    <a href = "{sectionid}">{linkname}</a>
+</div>
+                '''.format(
+    sectionid = SISdatum.getSectionName(),
+    linkname = SISdatum.getName(),
+)
+        return html
+
+    def genOutputBox(self, SISdatum):
+        html ='''
+<div class = OutputBoxClass>
+    {output}
+</div>
+'''.format(output = SISdatum.getOutput())
+        return html
+
+    def genOutputSection(self, SISdatums):
+        html ='''
+<div class = OutputSectionClass>
+'''
+        for d in SISdatums:
+            html += self.getOutputBox(d)
+            html += '<a href = #index>Back to index</a>'
+            html += '<a name = "{sectionid}"></a>'.format(seciondid = d.getSectionName())
+        html +='''
+</div>
+'''
 
 class SysHTMLGenerator:
     def __init__(self, system, sysinfo):
@@ -260,7 +297,6 @@ class SysHTMLGenerator:
 class SysinfoSnapshot:
     def __init__(self, system, config):
         self.system = system
-        self.idservice = IdentityService(5000)
         self.appconfig = config
 
 class SysinfoSnapshotWin(SysinfoSnapshot):
@@ -723,21 +759,21 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
         try:
             f = open(filename, 'r')
         except:
-            return SysInfoData(filename, 'FILENOTFOUND', 'sysinfo-file', self.idservice.createID())
+            return SysInfoData(filename, 'FILENOTFOUND', 'sysinfo-file')
         out = f.read()
         f.close()
-        FDStruct = SysInfoData(filename, out, 'sysinfo-file', self.idservice.createID())
+        FDStruct = SysInfoData(filename, out, 'sysinfo-file')
         return FDStruct
 
     def callMethod(self, methodname):
         m = getattr(self, '{meth}'.format(meth = methodname))
         out = m()
-        MStruct = SysInfoData(methodname, out, 'sysinfo-method', self.idservice.createID())
+        MStruct = SysInfoData(methodname, out, 'sysinfo-method')
         return MStruct
 
     def callCommand(self, command):
         out = UnixCommand('{cmd}'.format(cmd = command), command).systemCall()
-        CStruct = SysInfoData(command, out, 'sysinfo-command', self.idservice.createID())
+        CStruct = SysInfoData(command, out, 'sysinfo-command')
         print CStruct
         return CStruct
 
@@ -754,12 +790,12 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
         return self.htmlgen.constructPage()
 
 class SysInfoData:
-    def __init__(self, name, output, type, id):
+    def __init__(self, name, output, type):
         self.name = name
         self.output = output
         self.type = type
         self.id = id
-        self.section = self.name
+        self.section = self.name+self.type
 
     def getName(self):
         return self.name
@@ -791,9 +827,6 @@ class App:
         'Version': '0.1',
         'ProgramName': 'System Information Snapshot',
         }
-
-        #identification generator for element control in HTML, assuming there won't be more than 5000 elements for now...
-        self.identservice = IdentityService(5000)
 
         #Python command-line option/help generator http://docs.python.org/library/optparse.html
         self.parser = OptionParser()
