@@ -123,30 +123,79 @@ class AdvancedSysHTMLGenerator:
 	    padding:0;
         }
 
-        div.MellanoxTitleContainer {
+        .MellanoxTitleContainer {
 	    position:relative;
 	    margin:0;
 	    font-size:36px;
 	    text-align:center;
         }
 
-        div.MenuContainer{
+        .MenuTitle{
+        font-weight:bold;
+        font-size:22;
+        }
+        .MenuContainer{
+        width:100%;
+        height:300;
+        text-align:center;
+
         }
 
-        div.Menu{
+        .Menu{
+        float:left;
+        margin:9.5%;
         }
 
-        div.MenuElement{
-	    float:left;
+        .MenuElement{
         }
 
-        div.OutputHeader{
+        .Buttons{
+	    font-family: Arial, Helvetica, sans-serif;
+	    font-size: 14px;
+	    color: #ffffff;
+	    padding:5;
+	    background: -moz-linear-gradient(
+		top,
+		#42aaff 0%,
+		#003366);
+	    background: -webkit-gradient(
+		linear, left top, left bottom,
+		from(#42aaff),
+		to(#003366));
+	    -moz-border-radius: 10px;
+	    -webkit-border-radius: 10px;
+	    border-radius: 10px;
+	    border: 1px solid #003366;
+	    -moz-box-shadow:
+		0px 1px 3px rgba(000,000,000,0.5),
+		inset 0px 0px 1px rgba(255,255,255,0.5);
+	    -webkit-box-shadow:
+		0px 1px 3px rgba(000,000,000,0.5),
+		inset 0px 0px 1px rgba(255,255,255,0.5);
+	    box-shadow:
+		0px 1px 3px rgba(000,000,000,0.5),
+		inset 0px 0px 1px rgba(255,255,255,0.5);
+	    text-shadow:
+		0px -1px 0px rgba(000,000,000,0.7),
+		0px 1px 0px rgba(255,255,255,0.3);
+        }
+
+        .OutputContainer{
+        width:70%;
+        }
+
+        .OutputSection{
+        width-bottom;20;
+        }
+        .OutputHeader{
         font-weight:bold;
         font-size:150%;
+        margin-bottom:10;
+        margin-left:20;
         }
 
-        div.OutputBox{
-        margin:10;
+        .OutputBox{
+        margin:100;
         }
         '''
 
@@ -156,19 +205,26 @@ class AdvancedSysHTMLGenerator:
         html = '''
         <html>
         <head>
-        <script type="text/javascript" language="JavaScript"><!--
-        function HideContent(d) {
-        document.getElementById(d).style.display = "none";
+        <script>
+        function ToggleVisibility(id)
+        {
+        var e = document.getElementById(id);
+        if(e.style.display == 'block')
+          e.style.display = 'none';
+          e.innerHTML = 'Show';
+        else
+          e.style.display = 'block';
+          e.innerHTML = 'Hide';
         }
-        function ShowContent(d) {
-        document.getElementById(d).style.display = "block";
-        }
-        function ReverseDisplay(d) {
-        if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
-        else { document.getElementById(d).style.display = "none"; }
-        }
-        //--></script>
 
+function myFunction()
+{
+alert("Hello World!");
+}
+        </script>
+        '''
+
+        html += '''
         <STYLE type="text/css">
         {thecss}
         </STYLE>
@@ -187,23 +243,39 @@ class AdvancedSysHTMLGenerator:
             Mellanox SIS
 	        </div>
 	        '''
+        html += '''
+        <div class = SuperLargBox style = "width:100%;height:100px;">
+        </div>
+        '''
 
-        html += '<div class = menuContainer>'
+        html += '<div class = MenuContainer>'
 
         html += self.genSISMenu(SISdatumsets['Commands'], 'Commands')
+
         html += self.genSISMenu(SISdatumsets['Network'], 'Network')
+
         html += self.genSISMenu(SISdatumsets['Files'], 'Files')
+
+
 
         html += '</div>'
 
-        html += '<div class = outputContainer>'
+        html += '''
+        <div class = SuperLargBox style = "width:100%;height:1000;">
+        </div>
+        '''
+
+
+
+        html += '<div class = OutputContainer>'
 
         html += self.genOutputSection(SISdatumsets['Commands'])
         html += self.genOutputSection(SISdatumsets['Network'])
         html += self.genOutputSection(SISdatumsets['Files'])
 
         html += '</div>'
-
+        html += '</div>'
+        html += '</div>'
 
         html += '</html>'
         return html
@@ -211,7 +283,9 @@ class AdvancedSysHTMLGenerator:
     def genSISMenu(self, SISdatums, datumsetname):
         html = '''
         <div class = Menu>
+        <div class = MenuTitle>
         {i} Menu
+        </div>
                 '''.format(i = datumsetname
         )
         for d in SISdatums:
@@ -233,28 +307,39 @@ class AdvancedSysHTMLGenerator:
         return html
 
     def genOutputBox(self, SISdatum):
-        html ='''
-        <div id = {ident} class = OutputBox style = "display:none;">
+        html = '<a name = "{sectionid}"></a>'.format(sectionid = SISdatum.getSectionName())
+
+        html +='''
+
         <div class = OutputHeader>
         {header}
         </div>
+        <button onclick="sayhi()">
+        Show
+        </button>
+        <button onclick="myFunction()">Try it</button>
+        '''.format(header = SISdatum.getName(),
+                    ident = SISdatum.getName(),
+        )
+
+        html += '<a class = Buttons href = #index>Index</a>'
+
+        html += '''
+        <div id = {ident} class = OutputBox >
         {output}
         </div>
         '''.format(
             output = SISdatum.getOutput(),
-            header = SISdatum.getName(),
             ident = SISdatum.getName(),
         )
         return html
 
     def genOutputSection(self, SISdatums):
         html ='''
-        <div class = OutputSectionClass>
+        <div class = OutputSection>
         '''
         for SISdatum in SISdatums:
             html += self.genOutputBox(SISdatum)
-            html += '<a href = #index>Back to index</a>'
-            html += '<a name = "{sectionid}"></a>'.format(sectionid = SISdatum.getSectionName())
         html +='''
         </div>
         '''
