@@ -205,23 +205,6 @@ class AdvancedSysHTMLGenerator:
         html = '''
         <html>
         <head>
-        <script>
-        function ToggleVisibility(id)
-        {
-        var e = document.getElementById(id);
-        if(e.style.display == 'block')
-          e.style.display = 'none';
-          e.innerHTML = 'Show';
-        else
-          e.style.display = 'block';
-          e.innerHTML = 'Hide';
-        }
-
-function myFunction()
-{
-alert("Hello World!");
-}
-        </script>
         '''
 
         html += '''
@@ -233,6 +216,15 @@ alert("Hello World!");
 
         html += '''
         <body>
+        <script>
+
+function sayhi(){
+alert("Hello World!");
+}
+        </script>
+        '''
+
+        html += '''
         <title>{hostn}'s SIS</title>
         '''.format(hostn = self.system.getHostname())
 

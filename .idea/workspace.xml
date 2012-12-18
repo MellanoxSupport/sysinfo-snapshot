@@ -26,7 +26,7 @@
       <file leaf-file-name="sysinfo-snapshot.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sysinfo-snapshot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="218" column="8" selection-start="4889" selection-end="4889" vertical-scroll-proportion="0.610998">
+            <state line="220" column="16" selection-start="4803" selection-end="4803" vertical-scroll-proportion="-0.4663951">
               <folding>
                 <element signature="e#236#269#0" expanded="true" />
               </folding>
@@ -336,7 +336,11 @@
       <created>1355792383337</created>
       <updated>1355792383337</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="HTML interface upgrades&#10;">
+      <created>1355823034040</created>
+      <updated>1355823034040</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -533,7 +537,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sysinfo-snapshot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="218" column="8" selection-start="4889" selection-end="4889" vertical-scroll-proportion="0.610998">
+        <state line="220" column="16" selection-start="4803" selection-end="4803" vertical-scroll-proportion="-0.4663951">
           <folding>
             <element signature="e#236#269#0" expanded="true" />
           </folding>
