@@ -114,22 +114,105 @@ class WindowsCommand(Command):
 class AdvancedSysHTMLGenerator:
     def __init__(self, system, sysinfo):
         self.sysinfo = sysinfo
+        self.system = system
 
     def genSISCSS(self):
         css = '''
-div.menuClass{}
-div.hrefClass{}
-div.OutputBoxClass{}
-div.OutputSectionClass{}
-'''
+        * {
+	    margin:0;
+	    padding:0;
+        }
 
+        div.MellanoxTitleContainer {
+	    position:relative;
+	    margin:0;
+	    font-size:36px;
+	    text-align:center;
+        }
 
-    def genSISMenu(self, SISdatums, menuID):
+        div.MenuContainer{
+        }
+
+        div.Menu{
+        }
+
+        div.MenuElement{
+	    float:left;
+        }
+
+        div.OutputHeader{
+        font-weight:bold;
+        font-size:150%;
+        }
+
+        div.OutputBox{
+        margin:10;
+        }
+        '''
+
+        return css
+
+    def genSISInterface(self, SISdatumsets):
         html = '''
-<div class = menuClass id = {divid}>
-                '''.format(
-            divid = menuID,
-            content = c,
+        <html>
+        <head>
+        <script type="text/javascript" language="JavaScript"><!--
+        function HideContent(d) {
+        document.getElementById(d).style.display = "none";
+        }
+        function ShowContent(d) {
+        document.getElementById(d).style.display = "block";
+        }
+        function ReverseDisplay(d) {
+        if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
+        else { document.getElementById(d).style.display = "none"; }
+        }
+        //--></script>
+
+        <STYLE type="text/css">
+        {thecss}
+        </STYLE>
+        </head>
+        '''.format(thecss = self.genSISCSS())
+
+        html += '''
+        <body>
+        <title>{hostn}'s SIS</title>
+        '''.format(hostn = self.system.getHostname())
+
+        html += '''
+            <a name = 'index'>
+            </a>
+        	<div class = 'MellanoxTitleContainer'>
+            Mellanox SIS
+	        </div>
+	        '''
+
+        html += '<div class = menuContainer>'
+
+        html += self.genSISMenu(SISdatumsets['Commands'], 'Commands')
+        html += self.genSISMenu(SISdatumsets['Network'], 'Network')
+        html += self.genSISMenu(SISdatumsets['Files'], 'Files')
+
+        html += '</div>'
+
+        html += '<div class = outputContainer>'
+
+        html += self.genOutputSection(SISdatumsets['Commands'])
+        html += self.genOutputSection(SISdatumsets['Network'])
+        html += self.genOutputSection(SISdatumsets['Files'])
+
+        html += '</div>'
+
+
+        html += '</html>'
+        return html
+
+    def genSISMenu(self, SISdatums, datumsetname):
+        html = '''
+        <div class = Menu>
+        {i} Menu
+                '''.format(i = datumsetname
         )
         for d in SISdatums:
             html += self.genSISMenuElement(d)
@@ -140,158 +223,41 @@ div.OutputSectionClass{}
 
     def genSISMenuElement(self, SISdatum):
         html = '''
-<div class = hrefClass id = {divid}>
-    <a href = "{sectionid}">{linkname}</a>
-</div>
+        <div class = MenuElement>
+        <a href = "#{sectionid}">{linkname}</a>
+        </div>
                 '''.format(
-    sectionid = SISdatum.getSectionName(),
-    linkname = SISdatum.getName(),
+        sectionid = SISdatum.getSectionName(),
+        linkname = SISdatum.getName(),
 )
         return html
 
     def genOutputBox(self, SISdatum):
         html ='''
-<div class = OutputBoxClass>
-    {output}
-</div>
-'''.format(output = SISdatum.getOutput())
+        <div id = {ident} class = OutputBox style = "display:none;">
+        <div class = OutputHeader>
+        {header}
+        </div>
+        {output}
+        </div>
+        '''.format(
+            output = SISdatum.getOutput(),
+            header = SISdatum.getName(),
+            ident = SISdatum.getName(),
+        )
         return html
 
     def genOutputSection(self, SISdatums):
         html ='''
-<div class = OutputSectionClass>
-'''
-        for d in SISdatums:
-            html += self.getOutputBox(d)
+        <div class = OutputSectionClass>
+        '''
+        for SISdatum in SISdatums:
+            html += self.genOutputBox(SISdatum)
             html += '<a href = #index>Back to index</a>'
-            html += '<a name = "{sectionid}"></a>'.format(seciondid = d.getSectionName())
+            html += '<a name = "{sectionid}"></a>'.format(sectionid = SISdatum.getSectionName())
         html +='''
-</div>
-'''
-
-class SysHTMLGenerator:
-    def __init__(self, system, sysinfo):
-        self.hostname = system.getHostname()
-        self.sysinfo = sysinfo
-
-
-    def constructPage(self):
-        page = '''
-                <html>
-                    <head>
-                    {title}
-                    </head>
-
-                    <body>
-                        <pre>
-                        {index}
-                        <h1>Server Commands:</h1>
-                        {ServerCommandTable}
-                        <h1>Network Information:</h1>
-                        {NetworkCommandTable}
-                        <h1>Files Information:</h1>
-                        {ServerFilesTable}
-
-                        <h1>Server Commands:</h1>
-                        {MethodsOutput}
-                        <h1>Network Information:</h1>
-                        {FabricDiagnosticsOutput}
-                        <h1>Files Information:</h1>
-                        {FilesOutput}
-
-                        </pre>
-                    </body>
-                </html>
-               '''.format(
-            title = self.generateTitle(self.hostname),
-            index = self.generateIndex(),
-
-            ServerCommandTable = self.generateTableSections(self.sysinfo.snapshotcmdstructs + self.sysinfo.snapshotmethstructs),
-            NetworkCommandTable = self.generateTableSections(self.sysinfo.snapshotfabstructs),
-            ServerFilesTable = self.generateTableSections(self.sysinfo.snapshotfilestructs),
-
-            MethodsOutput = self.generateOutputSections(self.sysinfo.snapshotmethstructs + self.sysinfo.snapshotcmdstructs),
-            FabricDiagnosticsOutput = self.generateOutputSections(self.sysinfo.snapshotfabstructs),
-            FilesOutput = self.generateOutputSections(self.sysinfo.snapshotfilestructs),
-        )
-        return page
-
-    def generateTitle(self, hostname):
-        return "<title>{hostn}'s Diagnostics</title>".format(hostn = hostname)
-
-    def generateIndex(self):
-        out = '''
-                <a name="index"></a>
-                    <h1>
-                    Mellanox Technologies
-                    </h1>
-                <a name="index"></a>
-                    <h1>
-                    System Information Snapshot Utility
-                    </h1>
-                <a name="index"></a>
-                    <h1>
-                    Version: 0.1
-                    </h1>
-                <hr>
-              '''
-        return out
-
-    def generateTableSections(self, sysinfo_data_structure_list):
+        </div>
         '''
-        This function generates one table based on the sysinfo datatype retrieved/constructed from the underlying os
-        '''
-
-        #Grab the amount of data structures in the list
-        struct_count = len(sysinfo_data_structure_list)
-
-
-        #initiate a count to keep track of when to break
-        c = 0
-        limit = 3
-
-        #start writing the tabled section...
-        html = ''
-
-        #Not exactly sure how HTML tables work, trying to figure out specifications for the entire table section here
-        html += '''
-        <table cols=\"{numofcols}\" border=\"{bordervalue}\" bgcolor=\"{bgcolor}\"width=\"{width}%\">\n<tbody>\n<tr>
-        '''.format(
-            numofcols = "4",
-            bordervalue = "0",
-            bgcolor = "#E0E0FF",
-            width = "100",
-            )
-
-        #elements here are unpackaged sysinfostructs
-
-        for element in sysinfo_data_structure_list:
-            html += '''
-                <td width = 25%>
-                    <a href="{secname}">{elementname}</a>
-                </td>
-                    '''.format(
-                secname = element.getSectionName(),
-                elementname = element.getName(),
-            )
-            c += 1
-            if c > limit:
-                html += '''
-                </tr>
-                <tr>
-                        '''
-                limit += 3
-        return html
-
-    def generateOutputSections(self, sysinfodatums):
-        html = ''
-        for datum in sysinfodatums:
-            html += self.generateOutputSection(datum)
-        return html
-
-    def generateOutputSection(self, sysinfodatum):
-        html = '<h1>{body}</h1>'.format(body = sysinfodatum.getOutput())
-        html += '<a name = "{sectionname}"></a>'.format(sectionname = sysinfodatum.getSectionName())
         return html
 
 class SysinfoSnapshot:
@@ -844,7 +810,7 @@ class App:
             self.sysinfo = SysinfoSnapshotUnix(self.system, self.configuration)
 
         #Initiate interface generator
-        self.htmlgen = SysHTMLGenerator(self.system, self.sysinfo)
+        self.htmlgen = AdvancedSysHTMLGenerator(self.system, self.sysinfo)
 
 
     def __configureCLI__(self):
@@ -869,7 +835,11 @@ class App:
         print('Please wait, collecting...')
         self.sysinfo.runDiscovery()
         print('Discovery complete... generating interface')
-        interface = self.htmlgen.constructPage()
+
+        interface = self.htmlgen.genSISInterface({'Commands':self.sysinfo.snapshotcmdstructs + self.sysinfo.snapshotmethstructs,
+                                                  'Network':self.sysinfo.snapshotfabstructs,
+                                                  'Files':self.sysinfo.snapshotfilestructs})
+
         print('Dumping Interface at {location}'.format(location = os.getcwd()))
         self.sysinfo.dumpHTML(interface, '{hostname}Snapshot'.format(hostname = self.system.getHostname()))
 
