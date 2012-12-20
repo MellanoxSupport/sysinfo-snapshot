@@ -1,3 +1,4 @@
+# coding=utf-8
 '''
 
 Created on Sep 24, 2012
@@ -21,6 +22,7 @@ import shlex
 import platform
 import os
 import getpass
+import re
 
 
 
@@ -123,6 +125,10 @@ class AdvancedSysHTMLGenerator:
 	    padding:0;
         }
 
+        ul li ul {
+        display: none;
+        }
+
         .MellanoxTitleContainer {
 	    position:relative;
 	    margin:0;
@@ -134,59 +140,27 @@ class AdvancedSysHTMLGenerator:
         font-weight:bold;
         font-size:22;
         }
-        .MenuContainer{
-        width:100%;
-        height:300;
-        text-align:center;
 
+        .MenuContainer{
+        width:1500;
+        height:1000;
         }
 
         .Menu{
         float:left;
-        margin:9.5%;
+        width:33%;
+        height:100%
         }
 
         .MenuElement{
         }
 
-        .Buttons{
-	    font-family: Arial, Helvetica, sans-serif;
-	    font-size: 14px;
-	    color: #ffffff;
-	    padding:5;
-	    background: -moz-linear-gradient(
-		top,
-		#42aaff 0%,
-		#003366);
-	    background: -webkit-gradient(
-		linear, left top, left bottom,
-		from(#42aaff),
-		to(#003366));
-	    -moz-border-radius: 10px;
-	    -webkit-border-radius: 10px;
-	    border-radius: 10px;
-	    border: 1px solid #003366;
-	    -moz-box-shadow:
-		0px 1px 3px rgba(000,000,000,0.5),
-		inset 0px 0px 1px rgba(255,255,255,0.5);
-	    -webkit-box-shadow:
-		0px 1px 3px rgba(000,000,000,0.5),
-		inset 0px 0px 1px rgba(255,255,255,0.5);
-	    box-shadow:
-		0px 1px 3px rgba(000,000,000,0.5),
-		inset 0px 0px 1px rgba(255,255,255,0.5);
-	    text-shadow:
-		0px -1px 0px rgba(000,000,000,0.7),
-		0px 1px 0px rgba(255,255,255,0.3);
-        }
-
         .OutputContainer{
-        width:70%;
         }
 
         .OutputSection{
-        width-bottom;20;
         }
+
         .OutputHeader{
         font-weight:bold;
         font-size:150%;
@@ -195,7 +169,6 @@ class AdvancedSysHTMLGenerator:
         }
 
         .OutputBox{
-        margin:100;
         }
         '''
 
@@ -217,47 +190,59 @@ class AdvancedSysHTMLGenerator:
         html += '''
         <body>
         <script>
+        $('.list > li a').click(function () {
+        $(this).parent().find('ul').toggle();
+        });
 
-function sayhi(){
-alert("Hello World!");
-}
+        function findPos(obj) {
+        var curtop = 0;
+        if (obj.offsetParent) {
+            do {
+                curtop += obj.offsetTop;
+            } while (obj = obj.offsetParent);
+        return [curtop];
+        }
+        }
+
+        function goToIndex(id){
+        window.scroll(0,findPos(document.getElementById(id)));
+        }
+
+        function ToggleButtonVisibility(id){
+        if (document.getElementById(id).style.visibility != "hidden"){
+            document.getElementById(id).style.visibility = "hidden";
+            document.getElementById(id).style.oldheight = document.getElementById(id).style.height;
+            document.getElementById(id).style.oldwidth = document.getElementById(id).style.width;
+            document.getElementById(id).style.height = "0%";
+            document.getElementById(id).style.width = "0%";
+            }
+        else{
+            document.getElementById(id).style.visibility = "visible";
+            document.getElementById(id).style.height = document.getElementById(id).style.oldheight;
+            document.getElementById(id).style.width = document.getElementById(id).style.oldwidth;
+        }
+        }
         </script>
         '''
 
         html += '''
-        <title>{hostn}'s SIS</title>
+        <title>{hostn} Diagnostics</title>
         '''.format(hostn = self.system.getHostname())
 
         html += '''
-            <a name = 'index'>
-            </a>
+            <div name = 'index'></div>
+            </button>
         	<div class = 'MellanoxTitleContainer'>
-            Mellanox SIS
+            Mellanox System Information Snapshot
 	        </div>
+	        <div id = "index"></div>
+	        <hr width="100%" height="5"></hr>
 	        '''
-        html += '''
-        <div class = SuperLargBox style = "width:100%;height:100px;">
-        </div>
-        '''
-
         html += '<div class = MenuContainer>'
-
         html += self.genSISMenu(SISdatumsets['Commands'], 'Commands')
-
         html += self.genSISMenu(SISdatumsets['Network'], 'Network')
-
         html += self.genSISMenu(SISdatumsets['Files'], 'Files')
-
-
-
         html += '</div>'
-
-        html += '''
-        <div class = SuperLargBox style = "width:100%;height:1000;">
-        </div>
-        '''
-
-
 
         html += '<div class = OutputContainer>'
 
@@ -266,8 +251,7 @@ alert("Hello World!");
         html += self.genOutputSection(SISdatumsets['Files'])
 
         html += '</div>'
-        html += '</div>'
-        html += '</div>'
+
 
         html += '</html>'
         return html
@@ -275,23 +259,31 @@ alert("Hello World!");
     def genSISMenu(self, SISdatums, datumsetname):
         html = '''
         <div class = Menu>
-        <div class = MenuTitle>
-        {i} Menu
-        </div>
-                '''.format(i = datumsetname
+        <h2 class = "MenuTitle">{i} Menu</h2>
+        <button onclick="ToggleButtonVisibility('{ident}')">
+        Show/Hide
+        </button>
+        <div id = "collapsemenu{ext}">
+
+                '''.format(
+            i = datumsetname,
+            ident = 'collapsemenu'+datumsetname,
+            ext = datumsetname,
         )
         for d in SISdatums:
             html += self.genSISMenuElement(d)
-        html += '</div>'
+        html += '</div></div>'
         return html
 
 
 
     def genSISMenuElement(self, SISdatum):
         html = '''
+        <li>
         <div class = MenuElement>
         <a href = "#{sectionid}">{linkname}</a>
         </div>
+        </li>
                 '''.format(
         sectionid = SISdatum.getSectionName(),
         linkname = SISdatum.getName(),
@@ -306,19 +298,22 @@ alert("Hello World!");
         <div class = OutputHeader>
         {header}
         </div>
-        <button onclick="sayhi()">
-        Show
+        <button onclick="ToggleButtonVisibility('{ident}')">
+        Show/Hide
         </button>
-        <button onclick="myFunction()">Try it</button>
         '''.format(header = SISdatum.getName(),
                     ident = SISdatum.getName(),
         )
 
-        html += '<a class = Buttons href = #index>Index</a>'
+        html += '''
+                <button onclick="goToIndex('index')">Index</button>
+                                                  '''
 
         html += '''
         <div id = {ident} class = OutputBox >
+        <pre>
         {output}
+        </pre>
         </div>
         '''.format(
             output = SISdatum.getOutput(),
@@ -838,10 +833,11 @@ class SysInfoData:
         self.output = output
         self.type = type
         self.id = id
-        self.section = self.name+self.type
+        self.section = self.name+'Section'
 
     def getName(self):
-        return self.name
+        #strip all spaces due to future HTML use
+        return re.sub(r'\s+', '', self.name)
 
     def getOutput(self):
         return self.output
