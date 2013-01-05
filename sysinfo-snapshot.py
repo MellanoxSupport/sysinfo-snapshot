@@ -899,19 +899,16 @@ class App:
         return configuration
 
     def run(self):
-        #if not self.sysinfo.amIRoot():
-        #    print('You must run this program as root')
-        #    print('exiting...')
-        #    raise ValueError
-
         #Run all commands in accordance to flags passed from CLI
         print('Please wait, collecting...')
         self.sysinfo.runDiscovery()
         print('Discovery complete... generating interface')
 
-        interface = self.htmlgen.genSISInterface({'Commands':self.sysinfo.snapshotcmdstructs + self.sysinfo.snapshotmethstructs,
-                                                  'Network':self.sysinfo.snapshotfabstructs,
-                                                  'Files':self.sysinfo.snapshotfilestructs})
+        interface = self.htmlgen.genSISInterface({
+            'Commands':self.sysinfo.snapshotcmdstructs + self.sysinfo.snapshotmethstructs,
+            'Network':self.sysinfo.snapshotfabstructs,
+            'Files':self.sysinfo.snapshotfilestructs,
+            })
 
         print('Dumping Interface at {location}'.format(location = os.getcwd()))
         self.sysinfo.dumpHTML(interface, '{hostname}Snapshot'.format(hostname = self.system.getHostname()))
