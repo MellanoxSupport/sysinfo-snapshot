@@ -152,23 +152,11 @@ class AdvancedSysHTMLGenerator:
         height:100%
         }
 
-        .MenuElement{
-        }
-
-        .OutputContainer{
-        }
-
-        .OutputSection{
-        }
-
         .OutputHeader{
         font-weight:bold;
         font-size:150%;
         margin-bottom:10;
         margin-left:20;
-        }
-
-        .OutputBox{
         }
         '''
 
@@ -310,10 +298,12 @@ class AdvancedSysHTMLGenerator:
                                                   '''
 
         html += '''
-        <div id = {ident} class = OutputBox >
+        <div id = {ident} class = OutputBox>
+        <code>
         <pre>
         {output}
         </pre>
+        </code>
         </div>
         '''.format(
             output = SISdatum.getOutput(),
@@ -538,7 +528,6 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
             for i in self.methodStrings:
                 struct = self.callMethod(i)
                 self.snapshotmethstructs.append(struct)
-
             print('starting files dump')
             for i in self.fileStrings:
                 struct = self.getFileText(i)
