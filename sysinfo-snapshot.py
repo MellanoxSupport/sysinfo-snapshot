@@ -2,18 +2,6 @@
 '''
 
 Created on Sep 24, 2012
-Dependencies:
-    Unix:
-        cat
-        gzip
-
-    OFED:
-    Windows:
-    WinOF:
-
-    Python:
-        netifaces - http://alastairs-place.net/projects/netifaces/ (pip install netifaces)
-
 @author: luis
 '''
 from optparse import OptionParser
@@ -62,6 +50,7 @@ class System:
 
 
 class Command:
+
     def __init__(self, cmd, name, TIMEOUT = 100):
         self.cmd = cmd
         self.name = name
@@ -73,6 +62,7 @@ class Command:
         pass
 
 class fauxProcess:
+
     def __init__(self):
         pass
 
@@ -82,6 +72,7 @@ class fauxProcess:
         return out, err
 
 class UnixCommand(Command):
+
     def __init__(self, cmd, name):
         Command.__init__(self, cmd, name)
 
@@ -104,7 +95,6 @@ class WindowsCommand(Command):
     def __init__(self, cmd, name):
         Command.__init__(cmd, name)
 
-
     def systemCall(self):
         '''
         Perform an OS CLI call on the Windows commandline and get the full output
@@ -114,6 +104,7 @@ class WindowsCommand(Command):
         pass
 
 class AdvancedSysHTMLGenerator:
+
     def __init__(self, system, sysinfo):
         self.sysinfo = sysinfo
         self.system = system
@@ -159,7 +150,6 @@ class AdvancedSysHTMLGenerator:
         margin-left:20;
         }
         '''
-
         return css
 
     def genSISInterface(self, SISdatumsets):
@@ -167,14 +157,12 @@ class AdvancedSysHTMLGenerator:
         <html>
         <head>
         '''
-
         html += '''
         <STYLE type="text/css">
         {thecss}
         </STYLE>
         </head>
         '''.format(thecss = self.genSISCSS())
-
         html += '''
         <body>
         <script>
@@ -212,11 +200,9 @@ class AdvancedSysHTMLGenerator:
         }
         </script>
         '''
-
         html += '''
         <title>{hostn} Diagnostics</title>
         '''.format(hostn = self.system.getHostname())
-
         html += '''
             <div name = 'index'></div>
             </button>
@@ -231,16 +217,11 @@ class AdvancedSysHTMLGenerator:
         html += self.genSISMenu(SISdatumsets['Network'], 'Network')
         html += self.genSISMenu(SISdatumsets['Files'], 'Files')
         html += '</div>'
-
         html += '<div class = OutputContainer>'
-
         html += self.genOutputSection(SISdatumsets['Commands'])
         html += self.genOutputSection(SISdatumsets['Network'])
         html += self.genOutputSection(SISdatumsets['Files'])
-
         html += '</div>'
-
-
         html += '</html>'
         return html
 
@@ -263,8 +244,6 @@ class AdvancedSysHTMLGenerator:
         html += '</div></div>'
         return html
 
-
-
     def genSISMenuElement(self, SISdatum):
         html = '''
         <li>
@@ -275,14 +254,12 @@ class AdvancedSysHTMLGenerator:
                 '''.format(
         sectionid = SISdatum.getSectionName(),
         linkname = SISdatum.getName(),
-)
+        )
         return html
 
     def genOutputBox(self, SISdatum):
         html = '<a name = "{sectionid}"></a>'.format(sectionid = SISdatum.getSectionName())
-
         html +='''
-
         <div class = OutputHeader>
         {header}
         </div>
@@ -292,11 +269,9 @@ class AdvancedSysHTMLGenerator:
         '''.format(header = SISdatum.getName(),
                     ident = SISdatum.getName(),
         )
-
         html += '''
                 <button onclick="goToIndex('index')">Index</button>
                                                   '''
-
         html += '''
         <div id = {ident} class = OutputBox>
         <code>
@@ -323,11 +298,13 @@ class AdvancedSysHTMLGenerator:
         return html
 
 class SysinfoSnapshot:
+
     def __init__(self, system, config):
         self.system = system
         self.appconfig = config
 
 class SysinfoSnapshotWin(SysinfoSnapshot):
+
     def __init__(self , system, config):
         SysinfoSnapshot.__init__(self, system, config)
 
@@ -337,15 +314,13 @@ class SysinfoSnapshotWin(SysinfoSnapshot):
         else: return False
 
 class SysinfoSnapshotUnix(SysinfoSnapshot):
+
     def __init__(self , system, config):
         SysinfoSnapshot.__init__(self, system, config)
-
-
         self.snapshotcmdstructs = []
         self.snapshotfilestructs = []
         self.snapshotfabstructs = []
         self.snapshotmethstructs = []
-
         self.commandStrings = [
                                 'arp -an',
                                 'biosdecode',
@@ -461,7 +436,6 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
 
         self.allStrings = self.commandStrings + self.methodStrings + self.fileStrings + self.fabdiagStrings
 
-
     def amIRoot(self):
         if getpass.getuser() == 'root':
             return True
@@ -477,7 +451,6 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
         out = ''
         regularEthtoolList = []
         driverEthtoolList = []
-        #
             #Try to get the interfaces using ifconfig
         interfaces = [i for i in self.callCommand("ifconfig |grep encap|awk '{print $1'").getOutput().split('\n') if i != '']
         for interface in interfaces:
@@ -485,7 +458,6 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
             regularEthtoolList.append(regStruct)
             driverStruct = self.callCommand('ethtool -i {inter}'.format(inter = interface))
             driverEthtoolList.append(driverStruct)
-
         out += "Ethtool for all interfaces\n"
         for struct in regularEthtoolList:
             out += struct.getOutput()+'\n'
@@ -500,7 +472,6 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
         out += self.callCommand('/usr/sbin/saquery -g').getOutput()+'\n'
         out += "MLIDs members for each multicast group:" +'\n'
         MLIDS = self.callCommand("/usr/sbin/saquery -g |grep Mlid | sed 's/\./ /g'|awk '{print $2}'").getOutput() +'\n'
-
         for lid in MLIDS:
             out += "Members of MLID {gname} group".format(gname = lid) +'\n'
             out += self.callCommand("saquery -m {Lid}".format(Lid = lid)).getOutput() +'\n'
@@ -514,11 +485,9 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
         return self.callCommand("find /sys/class/net/ |xargs grep ^").getOutput()
 
     def runDiscovery(self):
-
         if self.appconfig[0].minimal:
             print('hit appconfig minimal, exiting')
             pass
-
         else:
             print('starting cmd dump')
             for i in self.commandStrings:
@@ -536,9 +505,6 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
             for i in self.fabdiagStrings:
                 struct = self.callCommand(i)
                 self.snapshotfabstructs.append(struct)
-
-
-
 
     def getFileText(self, filename):
         try:
@@ -575,6 +541,7 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
         return self.htmlgen.constructPage()
 
 class SysInfoData:
+
     def __init__(self, name, output, type):
         self.name = name
         self.output = output
@@ -601,46 +568,33 @@ class SysInfoData:
 
 
 class App:
-    '''
-        application interface specific stuff, CLI, GUI, etc
-    '''
+
     def __init__(self):
         #initiate a few entities to help out the application...
-
         #application specific metadata
         self.metadata = {
         'Author': 'Luis De Siqueira',
         'Version': '0.1',
         'ProgramName': 'System Information Snapshot',
         }
-
         #Python command-line option/help generator http://docs.python.org/library/optparse.html
         self.parser = OptionParser()
         self.configuration = self.__configureCLI__()
-
         #System variables obtained, depending on the host system these variables can be very different
         self.system = System()
-
-
         #detect the OS and initiate the correct object representing the sysinfo-snapshot program capabilities
         if self.system.getSystem() in ['Windows', 'Microsoft']:
             self.sysinfo = SysinfoSnapshotWin(self.system, self.configuration)
-
         else:
             self.sysinfo = SysinfoSnapshotUnix(self.system, self.configuration)
-
         #Initiate interface generator
         self.htmlgen = AdvancedSysHTMLGenerator(self.system, self.sysinfo)
-
 
     def __configureCLI__(self):
         '''
         Add support and dispatch for all flags
         '''
         self.parser.add_option("-m", "--minimal", action="store_true", dest="minimal")
-
-
-
         (opts, args) = self.parser.parse_args()
         configuration = [opts, args]
         return configuration
@@ -656,9 +610,7 @@ class App:
             'Network':self.sysinfo.snapshotfabstructs,
             'Files':self.sysinfo.snapshotfilestructs,
             })
-
         print('Dumping Interface at {location}'.format(location = os.getcwd()))
         self.sysinfo.dumpHTML(interface, '{hostname}Snapshot'.format(hostname = self.system.getHostname()))
-
 a = App()
 a.run()
