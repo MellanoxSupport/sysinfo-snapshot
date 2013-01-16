@@ -12,9 +12,6 @@ import os
 import getpass
 import re
 
-
-
-
 class System:
     '''
     Represents the state of the system in which the program is
