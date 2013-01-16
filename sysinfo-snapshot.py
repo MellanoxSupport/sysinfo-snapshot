@@ -28,7 +28,6 @@ class System:
         self.kernel_version = self.uname[2]
         self.release = self.uname[3]
         self.CPU_architecture = self.uname[4]
-
         #OS environment variables in a dictionary
         self.env = os.environ
 
