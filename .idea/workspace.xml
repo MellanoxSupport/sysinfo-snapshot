@@ -26,7 +26,7 @@
       <file leaf-file-name="sysinfo-snapshot.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sysinfo-snapshot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="141" column="23" selection-start="3212" selection-end="3212" vertical-scroll-proportion="0.36053592">
+            <state line="203" column="17" selection-start="5097" selection-end="5097" vertical-scroll-proportion="0.14616321">
               <folding>
                 <element signature="e#62#95#0" expanded="true" />
               </folding>
@@ -446,7 +446,11 @@
       <created>1358458333919</created>
       <updated>1358458333919</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="removed cstruct print&#10;">
+      <created>1358458380853</created>
+      <updated>1358458380853</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -646,7 +650,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sysinfo-snapshot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="141" column="23" selection-start="3212" selection-end="3212" vertical-scroll-proportion="0.36053592">
+        <state line="203" column="17" selection-start="5097" selection-end="5097" vertical-scroll-proportion="0.14616321">
           <folding>
             <element signature="e#62#95#0" expanded="true" />
           </folding>

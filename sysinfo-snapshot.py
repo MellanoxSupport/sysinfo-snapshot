@@ -197,12 +197,17 @@ class AdvancedSysHTMLGenerator:
         }
         </script>
         '''
+
+        html += '''
+        <button onclick = "ToggleVisibilityAll()">
+        Show/Hide All
+        </button>
+        '''
         html += '''
         <title>{hostn} Diagnostics</title>
         '''.format(hostn = self.system.getHostname())
         html += '''
             <div name = 'index'></div>
-            </button>
         	<div class = 'MellanoxTitleContainer'>
             Mellanox System Information Snapshot
 	        </div>
