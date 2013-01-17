@@ -422,12 +422,12 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
                                 '/var/log/messages',
                             ]
         self.methodStrings = [
-                                'Multicast_Information',
-                                'zz_sys_class_net_files',
-                                'zz_proc_net_bonding_files',
-                                'getHostname',
-                                'getRelease',
-                                'eth_tool_all_interfaces',
+                                #'Multicast_Information',
+                                #'zz_sys_class_net_files',
+                                #'zz_proc_net_bonding_files',
+                                #'getHostname',
+                                #'getRelease',
+                                #'eth_tool_all_interfaces',
                               ]
 
         self.allStrings = self.commandStrings + self.methodStrings + self.fileStrings + self.fabdiagStrings
