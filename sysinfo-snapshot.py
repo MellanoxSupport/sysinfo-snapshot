@@ -361,7 +361,7 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
                                 'numactl --hardware',
                                 'ompi_info',
                                 'perfquery',
-                                'ps xfalw',
+                                #'ps xfalw',
                                 'route -n',
                                 'sdpnetstat -anp',
                                 'sg_map -i -x',
