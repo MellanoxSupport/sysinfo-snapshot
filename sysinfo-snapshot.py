@@ -521,7 +521,6 @@ class SysinfoSnapshotUnix(SysinfoSnapshot):
     def callCommand(self, command):
         out = UnixCommand('{cmd}'.format(cmd = command), command).systemCall()
         CStruct = SysInfoData(command, out, 'sysinfo-command')
-        print CStruct
         return CStruct
 
     def gzip(self, file, newfilename):
