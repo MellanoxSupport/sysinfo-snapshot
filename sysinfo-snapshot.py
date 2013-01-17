@@ -139,7 +139,7 @@ class AdvancedSysHTMLGenerator:
         height:100%
         }
         .OutputContainer{
-        padding-top: 10cm;
+        padding-top: 15cm;
         .OutputHeader{
         font-weight:bold;
         font-size:150%;

@@ -434,7 +434,11 @@
       <created>1358457006796</created>
       <updated>1358457006796</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="removed cstruct print&#10;">
+      <created>1358457201725</created>
+      <updated>1358457201725</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="ToolWindowManager">
