@@ -200,7 +200,7 @@ class AdvancedSysHTMLGenerator:
         for s in self.sysinfo.snapshotcmdstructs:
             html += '''
             ToggleButtonVisibility(bullshit);
-            '''.format(idx = s.id)
+            '''
         for s in self.sysinfo.snapshotmethstructs:
             html += '''
             ToggleButtonVisibility({idx});
