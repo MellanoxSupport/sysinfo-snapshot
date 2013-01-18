@@ -200,19 +200,19 @@ class AdvancedSysHTMLGenerator:
         for struct in self.sysinfo.snapshotcmdstructs:
             html += '''
             ToggleButtonVisibility({idx});
-            '''.format(idx = struct.getId())
+            '''.format(idx = struct.id)
         for struct in self.sysinfo.snapshotmethstructs:
             html += '''
             ToggleButtonVisibility({idx});
-            '''.format(idx = struct.getId())
+            '''.format(idx = struct.id)
         for struct in self.sysinfo.snapshotfabstructs:
             html += '''
             ToggleButtonVisibility({idx});
-            '''.format(idx = struct.getId())
+            '''.format(idx = struct.id)
         for struct in self.sysinfo.snapshotfilestructs:
             html += '''
             ToggleButtonVisibility({idx});
-            '''.format(idx = struct.getId())
+            '''.format(idx = struct.id)
 
         html += '''}
 
