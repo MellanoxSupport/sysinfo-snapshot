@@ -195,8 +195,29 @@ class AdvancedSysHTMLGenerator:
             document.getElementById(id).style.width = document.getElementById(id).style.oldwidth;
         }
         }
-        </script>
+        function ToggleVisibilityAll(){
         '''
+        for struct in self.sysinfo.snapshotcmdstructs:
+            html += '''
+            ToggleButtonVisibility({idx});
+            '''.format(idx = struct.getId())
+        for struct in self.sysinfo.snapshotmethstructs:
+            html += '''
+            ToggleButtonVisibility({idx});
+            '''.format(idx = struct.getId())
+        for struct in self.sysinfo.snapshotfabstructs:
+            html += '''
+            ToggleButtonVisibility({idx});
+            '''.format(idx = struct.getId())
+        for struct in self.sysinfo.snapshotfilestructs:
+            html += '''
+            ToggleButtonVisibility({idx});
+            '''.format(idx = struct.getId())
+
+        html += '''}'''
+
+        #</script>
+        #'''
 
         html += '''
         <button onclick = "ToggleVisibilityAll()">
