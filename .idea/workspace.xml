@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="39f4415b-4399-4ae4-9d89-c7c17f3d5a73" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sysinfo-snapshot.py" afterPath="$PROJECT_DIR$/sysinfo-snapshot.py" />
     </list>
     <ignored path="sysinfo-snapshot-pub.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -26,7 +25,7 @@
       <file leaf-file-name="sysinfo-snapshot.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sysinfo-snapshot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="214" column="38" selection-start="5666" selection-end="5666" vertical-scroll-proportion="0.62241167">
+            <state line="219" column="11" selection-start="5730" selection-end="5730" vertical-scroll-proportion="0.725944">
               <folding>
                 <element signature="e#62#95#0" expanded="true" />
               </folding>
@@ -494,7 +493,11 @@
       <created>1358472864820</created>
       <updated>1358472864821</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="removed cstruct print&#10;">
+      <created>1358473116753</created>
+      <updated>1358473116754</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -694,7 +697,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sysinfo-snapshot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="214" column="38" selection-start="5666" selection-end="5666" vertical-scroll-proportion="0.62241167">
+        <state line="219" column="11" selection-start="5730" selection-end="5730" vertical-scroll-proportion="0.725944">
           <folding>
             <element signature="e#62#95#0" expanded="true" />
           </folding>
