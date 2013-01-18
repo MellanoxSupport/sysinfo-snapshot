@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="39f4415b-4399-4ae4-9d89-c7c17f3d5a73" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sysinfo-snapshot.py" afterPath="$PROJECT_DIR$/sysinfo-snapshot.py" />
     </list>
     <ignored path="sysinfo-snapshot-pub.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -466,7 +465,11 @@
       <created>1358467959446</created>
       <updated>1358467959446</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="removed cstruct print&#10;">
+      <created>1358468114124</created>
+      <updated>1358468114125</updated>
+    </task>
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="ToolWindowManager">
