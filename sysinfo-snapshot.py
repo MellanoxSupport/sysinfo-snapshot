@@ -214,10 +214,10 @@ class AdvancedSysHTMLGenerator:
             ToggleButtonVisibility({idx});
             '''.format(idx = struct.getId())
 
-        html += '''}'''
+        html += '''}
 
-        #</script>
-        #'''
+        </script>
+        '''
 
         html += '''
         <button onclick = "ToggleVisibilityAll()">
