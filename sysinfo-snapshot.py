@@ -200,19 +200,19 @@ class AdvancedSysHTMLGenerator:
         for s in self.sysinfo.snapshotcmdstructs:
             html += '''
             ToggleButtonVisibility({idx});
-            '''.format(idx = '""'+s.getSectionName()+'""')
+            '''.format(idx = '"'+s.getSectionName()+'"')
         for s in self.sysinfo.snapshotmethstructs:
             html += '''
             ToggleButtonVisibility({idx});
-            '''.format(idx = '""'+s.getSectionName()+'""')
+            '''.format(idx = '"'+s.getSectionName()+'"')
         for s in self.sysinfo.snapshotfabstructs:
             html += '''
             ToggleButtonVisibility({idx});
-            '''.format(idx = '""'+s.getSectionName()+'""')
+            '''.format(idx = '"'+s.getSectionName()+'"')
         for s in self.sysinfo.snapshotfilestructs:
             html += '''
             ToggleButtonVisibility({idx});
-            '''.format(idx = '""'+s.getSectionName()+'""')
+            '''.format(idx = '"'+s.getSectionName()+'"')
 
         html += '''}
 
