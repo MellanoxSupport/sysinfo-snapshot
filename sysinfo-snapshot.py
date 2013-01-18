@@ -199,20 +199,20 @@ class AdvancedSysHTMLGenerator:
         '''
         for s in self.sysinfo.snapshotcmdstructs:
             html += '''
-            ToggleButtonVisibility(bullshit);
-            '''
+            ToggleButtonVisibility({idx});
+            '''.format(idx = s.getSectionName())
         for s in self.sysinfo.snapshotmethstructs:
             html += '''
             ToggleButtonVisibility({idx});
-            '''.format(idx = s.id)
+            '''.format(idx = s.getSectionName())
         for s in self.sysinfo.snapshotfabstructs:
             html += '''
             ToggleButtonVisibility({idx});
-            '''.format(idx = s.id)
+            '''.format(idx = s.getSectionName())
         for s in self.sysinfo.snapshotfilestructs:
             html += '''
             ToggleButtonVisibility({idx});
-            '''.format(idx = s.id)
+            '''.format(idx = s.getSectionName())
 
         html += '''}
 
@@ -568,7 +568,6 @@ class SysInfoData:
         self.name = name
         self.output = output
         self.type = type
-        self.id = id
         self.section = self.name+'Section'
 
     def getName(self):
@@ -580,9 +579,6 @@ class SysInfoData:
 
     def getType(self):
         return self.type
-
-    def getId(self):
-        return self.id
 
     def getSectionName(self):
         return self.section
