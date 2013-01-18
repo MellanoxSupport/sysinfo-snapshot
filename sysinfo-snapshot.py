@@ -197,22 +197,22 @@ class AdvancedSysHTMLGenerator:
         }
         function ToggleVisibilityAll(){
         '''
-        for struct in self.sysinfo.snapshotcmdstructs:
+        for s in self.sysinfo.snapshotcmdstructs:
             html += '''
             ToggleButtonVisibility({idx});
-            '''.format(idx = struct.id)
-        for struct in self.sysinfo.snapshotmethstructs:
+            '''.format(idx = s.id)
+        for s in self.sysinfo.snapshotmethstructs:
             html += '''
             ToggleButtonVisibility({idx});
-            '''.format(idx = struct.id)
-        for struct in self.sysinfo.snapshotfabstructs:
+            '''.format(idx = s.id)
+        for s in self.sysinfo.snapshotfabstructs:
             html += '''
             ToggleButtonVisibility({idx});
-            '''.format(idx = struct.id)
-        for struct in self.sysinfo.snapshotfilestructs:
+            '''.format(idx = s.id)
+        for s in self.sysinfo.snapshotfilestructs:
             html += '''
             ToggleButtonVisibility({idx});
-            '''.format(idx = struct.id)
+            '''.format(idx = s.id)
 
         html += '''}
 
