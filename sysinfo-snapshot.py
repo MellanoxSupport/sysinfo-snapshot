@@ -45,6 +45,8 @@ class System:
 
 
 
+
+
 class Command:
 
     def __init__(self, cmd, name, TIMEOUT = 100):
@@ -225,12 +227,12 @@ class AdvancedSysHTMLGenerator:
 
         html += '''
             <div name = 'index'></div>
-        	<div class = 'MellanoxTitleContainer'>
+            <div class = 'MellanoxTitleContainer'>
             Mellanox System Information Snapshot
-	        </div>
-	        <div id = "index"></div>
-	        <hr width="100%" height="5"></hr>
-	        '''
+            </div>
+            <div id = "index"></div>
+            <hr width="100%" height="5"></hr>
+            '''
         html += '<div class = MenuContainer>'
         html += self.genSISMenu(SISdatumsets['Commands'], 'Commands')
         html += self.genSISMenu(SISdatumsets['Network'], 'Network')
@@ -589,13 +591,6 @@ class SysInfoData:
 class App:
 
     def __init__(self):
-        #initiate a few entities to help out the application...
-        #application specific metadata
-        self.metadata = {
-        'Author': 'Luis De Siqueira',
-        'Version': '0.1',
-        'ProgramName': 'System Information Snapshot',
-        }
         #Python command-line option/help generator http://docs.python.org/library/optparse.html
         self.parser = OptionParser()
         self.configuration = self.__configureCLI__()
