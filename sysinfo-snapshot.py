@@ -12,40 +12,6 @@ import os
 import getpass
 import re
 
-class System:
-    '''
-    Represents the state of the system in which the program is
-    being executed. A wrapper for the platform module
-    '''
-
-    def __init__(self):
-        self.uname = platform.uname()
-        self.system = self.uname[0]
-        self.hostname = self.uname[1]
-        self.kernel_version = self.uname[2]
-        self.release = self.uname[3]
-        self.CPU_architecture = self.uname[4]
-        #OS environment variables in a dictionary
-        self.env = os.environ
-
-    def getSystem(self):
-        return self.system
-
-    def getHostname(self):
-        return self.hostname
-
-    def getKernelVersion(self):
-        return self.kernel_version
-
-    def getRelease(self):
-        return self.release
-
-    def getCPUArchitecture(self):
-        return self.CPU_architecture
-
-
-
-
 
 class Command:
 
@@ -69,25 +35,7 @@ class fauxProcess:
         err = 'Process error'
         return out, err
 
-class UnixCommand(Command):
 
-    def __init__(self, cmd, name):
-        Command.__init__(self, cmd, name)
-
-    def systemCall(self):
-        '''
-        Perform an OS CLI call on the Unix commandline and get the full output
-        must use with commands that do not require interactivity
-        returns both the output and the error in a tuple
-        This is intentionally a blocking command, it will not return until the command has ended.
-        '''
-        try:
-            process = subprocess.Popen(shlex.split(self.cmd), stderr = subprocess.STDOUT, stdout = subprocess.PIPE)
-        #process.wait()
-        except:
-            process = fauxProcess()
-        out, err = process.communicate()
-        return out
 
 class WindowsCommand(Command):
     def __init__(self, cmd, name):
